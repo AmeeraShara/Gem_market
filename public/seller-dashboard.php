@@ -10,6 +10,7 @@ include "../config/db.php";
 
 $seller_id = $_SESSION['user_id'];
 
+// Fetch gems including deactivated ones
 $stmt = $conn->prepare("
     SELECT id, title, type, carat, color, clarity, origin, certificate, 
            price, is_negotiable, status
@@ -56,12 +57,13 @@ $gems = $stmt->get_result();
             $images = $stmtImg->get_result();
             $imgArray = [];
             while ($img = $images->fetch_assoc()) {
-                $imgArray[] = "uploads/gems/" . basename($img['image_path']);
+                $imgArray[] = "../uploads/gems/" . basename($img['image_path']);
             }
+            $stmtImg->close();
 
-            $certPath = !empty($g['certificate']) ? "uploads/certificates/" . basename($g['certificate']) : '';
+            $certPath = !empty($g['certificate']) ? "../uploads/certificates/" . basename($g['certificate']) : '';
             ?>
-            <tr style="border-bottom:1px solid #ccc;">
+            <tr style="border-bottom:1px solid #ccc; <?= $g['status'] === 'deactivated' ? 'opacity:0.5;' : '' ?>">
                 <td style="border:1px solid #ccc; padding:6px;"><?= htmlspecialchars($g['title']) ?></td>
                 <td style="border:1px solid #ccc; padding:6px;"><?= htmlspecialchars($g['type']) ?></td>
                 <td style="border:1px solid #ccc; padding:6px;"><?= htmlspecialchars($g['carat']) ?></td>
@@ -70,32 +72,33 @@ $gems = $stmt->get_result();
                     <?php
                     if ($g['status'] === 'approved') echo '<span style="color:green; font-weight:bold;">Approved</span>';
                     elseif ($g['status'] === 'pending') echo '<span style="color:orange; font-weight:bold;">Pending</span>';
-                    else echo '<span style="color:red; font-weight:bold;">Rejected</span>';
+                    elseif ($g['status'] === 'rejected') echo '<span style="color:red; font-weight:bold;">Rejected</span>';
+                    else echo '<span style="color:red; font-weight:bold;">Deactivated</span>';
                     ?>
                 </td>
                 <td style="border:1px solid #ccc; padding:6px; text-align:center;">
-                    <button class="view-btn"
-                        data-title="<?= htmlspecialchars($g['title']) ?>"
-                        data-type="<?= htmlspecialchars($g['type']) ?>"
-                        data-carat="<?= htmlspecialchars($g['carat']) ?>"
-                        data-color="<?= htmlspecialchars($g['color']) ?>"
-                        data-clarity="<?= htmlspecialchars($g['clarity']) ?>"
-                        data-origin="<?= htmlspecialchars($g['origin']) ?>"
-                        data-price="<?= number_format($g['price'], 2) ?>"
-                        data-negotiable="<?= $g['is_negotiable'] ?>"
-                        data-certificate="<?= $certPath ?>"
-                        data-images='<?= json_encode($imgArray) ?>'>View</button>
-                    <!-- Edit Button -->
-                    <button class="action-btn edit"
-                        onclick="window.location.href='../seller/edit-gem.php?id=<?= $g['id'] ?>'">
-                        Edit
-                    </button>
+                    <?php if($g['status'] === 'deactivated'): ?>
+                        <span style="color:red; font-weight:bold;">Deactivated</span>
+                    <?php else: ?>
+                        <button class="view-btn"
+                            data-title="<?= htmlspecialchars($g['title']) ?>"
+                            data-type="<?= htmlspecialchars($g['type']) ?>"
+                            data-carat="<?= htmlspecialchars($g['carat']) ?>"
+                            data-color="<?= htmlspecialchars($g['color']) ?>"
+                            data-clarity="<?= htmlspecialchars($g['clarity']) ?>"
+                            data-origin="<?= htmlspecialchars($g['origin']) ?>"
+                            data-price="<?= number_format($g['price'], 2) ?>"
+                            data-negotiable="<?= $g['is_negotiable'] ?>"
+                            data-certificate="<?= $certPath ?>"
+                            data-images='<?= json_encode($imgArray) ?>'>View</button>
 
-                    <!-- Delete Button -->
-                    <button class="action-btn delete"
-                        onclick="if(confirm('Are you sure you want to delete this gem?')) { window.location.href='../seller/delete-gem.php?id=<?= $g['id'] ?>'; }">
-                        Delete
-                    </button>
+                        <button class="action-btn edit"
+                            onclick="window.location.href='../seller/edit-gem.php?id=<?= $g['id'] ?>'">
+                            Edit
+                        </button>
+
+                        <button class="action-btn delete" data-id="<?= $g['id'] ?>">Delete</button>
+                    <?php endif; ?>
                 </td>
             </tr>
         <?php endwhile; ?>
@@ -127,63 +130,85 @@ $gems = $stmt->get_result();
 </div>
 
 <script>
-    const gemModal = document.getElementById('gemModal');
-    const modalClose = document.getElementById('modalClose');
+const gemModal = document.getElementById('gemModal');
+const modalClose = document.getElementById('modalClose');
 
-    document.querySelectorAll('.view-btn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            gemModal.style.display = 'flex';
-            document.getElementById('modalTitle').innerText = btn.dataset.title;
-            document.getElementById('modalType').innerText = btn.dataset.type;
-            document.getElementById('modalCarat').innerText = btn.dataset.carat;
-            document.getElementById('modalColor').innerText = btn.dataset.color;
-            document.getElementById('modalClarity').innerText = btn.dataset.clarity;
-            document.getElementById('modalOrigin').innerText = btn.dataset.origin;
-            document.getElementById('modalPrice').innerText = btn.dataset.price;
-            document.getElementById('modalNegotiable').innerText = btn.dataset.negotiable == 1 ? '(Negotiable)' : '';
+document.querySelectorAll('.view-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        gemModal.style.display = 'flex';
+        document.getElementById('modalTitle').innerText = btn.dataset.title;
+        document.getElementById('modalType').innerText = btn.dataset.type;
+        document.getElementById('modalCarat').innerText = btn.dataset.carat;
+        document.getElementById('modalColor').innerText = btn.dataset.color;
+        document.getElementById('modalClarity').innerText = btn.dataset.clarity;
+        document.getElementById('modalOrigin').innerText = btn.dataset.origin;
+        document.getElementById('modalPrice').innerText = btn.dataset.price;
+        document.getElementById('modalNegotiable').innerText = btn.dataset.negotiable == 1 ? '(Negotiable)' : '';
 
-            // Certificate
-            const certSpan = document.getElementById('modalCertificate');
-            if (btn.dataset.certificate) {
-                const ext = btn.dataset.certificate.split('.').pop().toLowerCase();
-                if (['jpg', 'jpeg', 'png', 'gif'].includes(ext)) {
-                    certSpan.innerHTML = `<img src="${btn.dataset.certificate}" style="width:80px; height:80px; object-fit:cover; cursor:pointer;" onclick="openImgModal('${btn.dataset.certificate}')">`;
-                } else {
-                    certSpan.innerHTML = `<a href="${btn.dataset.certificate}" target="_blank">View PDF</a>`;
-                }
+        const certSpan = document.getElementById('modalCertificate');
+        if (btn.dataset.certificate) {
+            const ext = btn.dataset.certificate.split('.').pop().toLowerCase();
+            if (['jpg','jpeg','png','gif'].includes(ext)) {
+                certSpan.innerHTML = `<img src="${btn.dataset.certificate}" style="width:80px;height:80px;object-fit:cover;cursor:pointer;" onclick="openImgModal('${btn.dataset.certificate}')">`;
             } else {
-                certSpan.innerText = 'N/A';
+                certSpan.innerHTML = `<a href="${btn.dataset.certificate}" target="_blank">View PDF</a>`;
             }
+        } else {
+            certSpan.innerText = 'N/A';
+        }
 
-            // Images
-            const imagesDiv = document.getElementById('modalImages');
-            imagesDiv.innerHTML = '';
-            const imgs = JSON.parse(btn.dataset.images);
-            imgs.forEach(src => {
-                const imgEl = document.createElement('img');
-                imgEl.src = src;
-                imgEl.style.width = '80px';
-                imgEl.style.height = '80px';
-                imgEl.style.objectFit = 'cover';
-                imgEl.style.cursor = 'pointer';
-                imgEl.style.border = '1px solid #ccc';
-                imgEl.style.borderRadius = '4px';
-                imgEl.style.margin = '2px';
-                imgEl.onclick = () => openImgModal(src);
-                imagesDiv.appendChild(imgEl);
-            });
+        const imagesDiv = document.getElementById('modalImages');
+        imagesDiv.innerHTML = '';
+        const imgs = JSON.parse(btn.dataset.images);
+        imgs.forEach(src => {
+            const imgEl = document.createElement('img');
+            imgEl.src = src;
+            imgEl.style.width = '80px';
+            imgEl.style.height = '80px';
+            imgEl.style.objectFit = 'cover';
+            imgEl.style.cursor = 'pointer';
+            imgEl.style.border = '1px solid #ccc';
+            imgEl.style.borderRadius = '4px';
+            imgEl.style.margin = '2px';
+            imgEl.onclick = () => openImgModal(src);
+            imagesDiv.appendChild(imgEl);
         });
     });
+});
 
-    modalClose.onclick = () => gemModal.style.display = 'none';
-    window.onclick = (e) => {
-        if (e.target == gemModal) gemModal.style.display = 'none';
-    };
+modalClose.onclick = () => gemModal.style.display = 'none';
+window.onclick = (e) => { if(e.target==gemModal) gemModal.style.display='none'; };
 
-    // Function to open larger image modal
-    function openImgModal(src) {
-        const imgModal = document.getElementById('imgModal');
-        document.getElementById('modalImg').src = src;
-        imgModal.style.display = 'flex';
-    }
+function openImgModal(src){
+    const imgModal = document.getElementById('imgModal');
+    document.getElementById('modalImg').src = src;
+    imgModal.style.display='flex';
+}
+
+// AJAX soft delete
+document.querySelectorAll('.action-btn.delete').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const gemId = btn.dataset.id;
+        if (!confirm('Are you sure you want to deactivate this gem?')) return;
+
+        fetch(`../seller/delete-gem.php?id=${gemId}`)
+        .then(res => res.text())
+        .then(msg => {
+            alert(msg);
+
+            const row = btn.closest('tr');
+
+            // Disable all buttons/links
+            row.querySelectorAll('button, a').forEach(el => el.disabled = true);
+
+            // Replace Actions column
+            const actionCell = row.querySelector('td:last-child');
+            actionCell.innerHTML = '<span style="color:red; font-weight:bold;">Deactivated</span>';
+
+            // Gray out row
+            row.style.opacity = '0.5';
+        })
+        .catch(err => alert('AJAX error: ' + err));
+    });
+});
 </script>
