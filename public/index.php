@@ -4,7 +4,7 @@ include __DIR__ . '/../config/db.php';
 
 // Fetch last 4 approved gems with seller info
 $sqlLatest = "
-    SELECT g.*, u.name AS seller_name
+    SELECT g.*, u.full_name AS seller_name
     FROM gems g
     JOIN users u ON g.seller_id = u.id
     WHERE g.status='approved'
