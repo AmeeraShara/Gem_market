@@ -117,7 +117,7 @@ body {
 /* IMAGES GRID */
 .images-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(5, 1fr);
     gap: 12px;
     margin-bottom: 20px;
 }
@@ -129,7 +129,7 @@ body {
 }
 
 .image-wrapper img {
-    width: 100%;
+    width: 70%;
     height: 140px;
     object-fit: cover;
     border-radius: 12px;

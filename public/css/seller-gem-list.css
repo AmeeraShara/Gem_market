@@ -1,0 +1,229 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #FCE7F3;
+    margin: 0;
+    padding: 20px;
+}
+
+/* NAVIGATION BAR*/
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #F9A8D4;
+    padding: 10px 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+nav div:first-child {
+    font-weight: bold;
+    font-size: 20px;
+    color: #DB2777;
+}
+
+nav a {
+    color: #DB2777;
+    text-decoration: none;
+    font-weight: bold;
+    margin-right: 15px;
+}
+
+nav a:last-child {
+    color: red;
+}
+
+/* TABLE STYLING*/
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+thead tr {
+    background: #F3F4F6;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    font-size: 14px;
+}
+
+td {
+    background: #fff;
+}
+
+tbody tr:hover {
+    background: #FDF2F8;
+}
+
+/* BUTTONS */
+.view-btn {
+    background: #EC4899;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: 0.3s;
+}
+
+.view-btn:hover {
+    background: #DB2777;
+}
+
+a.edit-link {
+    color: blue;
+    text-decoration: underline;
+}
+
+a.delete-link {
+    color: red;
+    text-decoration: underline;
+}
+
+/*GEM DETAILS MODAL */
+#gemModal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    justify-content: center;
+    align-items: center;
+    z-index: 50;
+    padding: 20px;
+}
+
+#gemModal .modal-content {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    max-width: 700px;
+    width: 100%;
+    position: relative;
+}
+
+#modalClose {
+    cursor: pointer;
+    font-size: 24px;
+    position: absolute;
+    right: 15px;
+    top: 10px;
+    color: #333;
+}
+
+#modalImages img {
+    width: 90px;
+    height: 90px;
+    object-fit: cover;
+    cursor: pointer;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    margin: 4px;
+    transition: transform 0.2s;
+}
+
+#modalImages img:hover {
+    transform: scale(1.05);
+}
+
+/* IMAGE ZOOM MODAL */
+#imgModal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+#modalImg {
+    max-width: 90%;
+    max-height: 90%;
+    border: 5px solid #fff;
+    border-radius: 10px;
+}
+
+/* STATUS COLORS */
+.status-approved {
+    color: green;
+    font-weight: bold;
+}
+
+.status-pending {
+    color: orange;
+    font-weight: bold;
+}
+
+.status-rejected {
+    color: red;
+    font-weight: bold;
+}
+
+.action-btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    margin: 2px;
+    color: white;
+    transition: 0.25s;
+}
+
+/* VIEW BUTTON - Blue */
+.action-btn.view {
+    background-color: #2563EB;
+}
+.action-btn.view:hover {
+    background-color: #1E40AF;
+}
+
+/* EDIT BUTTON - Green */
+.action-btn.edit {
+    background-color: #16A34A;
+}
+.action-btn.edit:hover {
+    background-color: #166534;
+}
+
+/* DELETE BUTTON - Red */
+.action-btn.delete {
+    background-color: #DC2626;
+}
+.action-btn.delete:hover {
+    background-color: #991B1B;
+}
+
+/*RESPONSIVE TABLE */
+@media (max-width: 700px) {
+    th, td {
+        font-size: 12px;
+        padding: 6px;
+    }
+
+    nav {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+
+    nav a {
+        margin-right: 10px;
+    }
+
+    #gemModal .modal-content {
+        padding: 15px;
+    }
+
+    #modalImages img {
+        width: 70px;
+        height: 70px;
+    }
+}

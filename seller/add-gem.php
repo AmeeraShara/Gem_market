@@ -19,6 +19,7 @@ if (isset($_POST['submit'])) {
   $color = $_POST['color'];
   $clarity = $_POST['clarity'];
   $origin = $_POST['origin'];
+  $description = $_POST['description']; // <-- NEW
   $price = $_POST['price'];
 
   // Set directories (inside public folder)
@@ -36,11 +37,26 @@ if (isset($_POST['submit'])) {
   if (!move_uploaded_file($_FILES['certificate']['tmp_name'], $cert_path)) {
     $msg = "Failed to upload certificate.";
   } else {
-    // Insert gem listing
+
+    // INSERT QUERY UPDATED WITH DESCRIPTION
     $stmt = $conn->prepare("INSERT INTO gems 
-            (seller_id, title, type, carat, color, clarity, origin, certificate, price)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("issdssssd", $seller_id, $title, $type, $carat, $color, $clarity, $origin, $cert_path, $price);
+      (seller_id, title, type, carat, color, clarity, origin, description, certificate, price)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
+    $stmt->bind_param(
+      "issdsssssd",
+      $seller_id,
+      $title,
+      $type,
+      $carat,
+      $color,
+      $clarity,
+      $origin,
+      $description,
+      $cert_path,
+      $price
+    );
+
     $stmt->execute();
     $gem_id = $stmt->insert_id;
     $stmt->close();
@@ -138,11 +154,19 @@ if (isset($_POST['submit'])) {
 
         </div>
       </div>
+      <br>
+
+      <div class="form-row">
+        <label>Description</label>
+        <textarea name="description" rows="5" required></textarea>
+      </div>
+      <br>
 
       <div class="form-row">
         <label>Gem Images</label>
         <input type="file" name="images[]" multiple accept="image/*" required>
       </div>
+      <br>
 
       <div class="button-row">
         <button type="button" class="back-btn" aria-label="Go back to dashboard"

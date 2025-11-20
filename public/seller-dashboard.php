@@ -21,6 +21,7 @@ $stmt->bind_param("i", $seller_id);
 $stmt->execute();
 $gems = $stmt->get_result();
 ?>
+<link rel="stylesheet" href="../public/css/seller-gem-list.css">
 
 <!-- NAVIGATION -->
 <nav style="display:flex; justify-content:space-between; align-items:center; background:#F9A8D4; padding:10px 20px; border-radius:8px; margin-bottom:20px;">
@@ -84,10 +85,17 @@ $gems = $stmt->get_result();
                         data-negotiable="<?= $g['is_negotiable'] ?>"
                         data-certificate="<?= $certPath ?>"
                         data-images='<?= json_encode($imgArray) ?>'>View</button>
-                    <a href="../seller/edit-gem.php?id=<?= $g['id'] ?>" style="color:blue; text-decoration:underline; margin-left:5px;">Edit</a>
-                    <a href="../seller/delete-gem.php?id=<?= $g['id'] ?>"
-                        onclick="return confirm('Are you sure you want to delete this gem?');"
-                        style="color:red; text-decoration:underline; margin-left:5px;">Delete</a>
+                    <!-- Edit Button -->
+                    <button class="action-btn edit"
+                        onclick="window.location.href='../seller/edit-gem.php?id=<?= $g['id'] ?>'">
+                        Edit
+                    </button>
+
+                    <!-- Delete Button -->
+                    <button class="action-btn delete"
+                        onclick="if(confirm('Are you sure you want to delete this gem?')) { window.location.href='../seller/delete-gem.php?id=<?= $g['id'] ?>'; }">
+                        Delete
+                    </button>
                 </td>
             </tr>
         <?php endwhile; ?>

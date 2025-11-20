@@ -17,7 +17,7 @@ if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
 
 $gem_id = intval($_GET['id']);
 
-// Fetch gem details
+// Fetch gem details (including description)
 $stmt = $conn->prepare("SELECT * FROM gems WHERE id=? AND seller_id=?");
 $stmt->bind_param("ii", $gem_id, $seller_id);
 $stmt->execute();
@@ -40,50 +40,70 @@ while ($row = $resImg->fetch_assoc()) {
 }
 $stmtImg->close();
 
-// Set directories
+// Directories
 $cert_dir = "../public/uploads/certificates/";
 $gems_dir = "../public/uploads/gems/";
 
-// Create directories if they don't exist
 if (!is_dir($cert_dir)) mkdir($cert_dir, 0777, true);
 if (!is_dir($gems_dir)) mkdir($gems_dir, 0777, true);
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
     $title = trim($_POST['title']);
     $type = trim($_POST['type']);
     $carat = trim($_POST['carat']);
     $color = trim($_POST['color']);
     $clarity = trim($_POST['clarity']);
     $origin = trim($_POST['origin']);
+    $description = trim($_POST['description']); // NEW
     $price = floatval($_POST['price']);
     $is_negotiable = isset($_POST['is_negotiable']) ? 1 : 0;
 
-    // Update gem info
+    // Update gem info including description
     $stmt = $conn->prepare("
         UPDATE gems 
-        SET title=?, type=?, carat=?, color=?, clarity=?, origin=?, price=?, is_negotiable=?
+        SET title=?, type=?, carat=?, color=?, clarity=?, origin=?, description=?, price=?, is_negotiable=?
         WHERE id=? AND seller_id=?
     ");
-    $stmt->bind_param("ssssssdiii", $title, $type, $carat, $color, $clarity, $origin, $price, $is_negotiable, $gem_id, $seller_id);
+
+    $stmt->bind_param(
+        "ssssssssdiii",
+        $title,
+        $type,
+        $carat,
+        $color,
+        $clarity,
+        $origin,
+        $description,
+        $price,
+        $is_negotiable,
+        $gem_id,
+        $seller_id
+    );
+
     $stmt->execute();
     $stmt->close();
 
     // Remove selected images
     if (!empty($_POST['remove_images'])) {
         foreach ($_POST['remove_images'] as $img_id) {
+
             $stmtDel = $conn->prepare("SELECT image_path FROM gem_images WHERE id=? AND gem_id=?");
             $stmtDel->bind_param("ii", $img_id, $gem_id);
             $stmtDel->execute();
             $res = $stmtDel->get_result();
+
             if ($res->num_rows) {
                 $row = $res->fetch_assoc();
                 if (file_exists($row['image_path'])) unlink($row['image_path']);
+
                 $stmtDel2 = $conn->prepare("DELETE FROM gem_images WHERE id=?");
                 $stmtDel2->bind_param("i", $img_id);
                 $stmtDel2->execute();
                 $stmtDel2->close();
             }
+
             $stmtDel->close();
         }
     }
@@ -93,6 +113,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         foreach ($_FILES['images']['tmp_name'] as $i => $tmpName) {
             $filename = time() . "_" . basename($_FILES['images']['name'][$i]);
             $targetFile = $gems_dir . $filename;
+
             if (move_uploaded_file($tmpName, $targetFile)) {
                 $stmtImg = $conn->prepare("INSERT INTO gem_images (gem_id, image_path) VALUES (?, ?)");
                 $stmtImg->bind_param("is", $gem_id, $targetFile);
@@ -104,8 +125,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Replace certificate
     if (!empty($_FILES['certificate']['name'])) {
-        // Delete old certificate
-        if (!empty($gem['certificate']) && file_exists($gem['certificate'])) unlink($gem['certificate']);
+
+        if (!empty($gem['certificate']) && file_exists($gem['certificate'])) {
+            unlink($gem['certificate']);
+        }
 
         $certFile = time() . "_" . basename($_FILES['certificate']['name']);
         $targetCert = $cert_dir . $certFile;
@@ -132,71 +155,89 @@ if (isset($_GET['msg'])) $msg = $_GET['msg'];
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Gem</title>
-    <link rel="stylesheet" href="/public/css/edit-gem.css
-">
-
+    <link rel="stylesheet" href="/public/css/edit-gem.css">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.3/dist/tailwind.min.css" rel="stylesheet">
 </head>
 
 <body class="bg-gray-50 p-6">
 
-    <main class="form-box" role="main" aria-labelledby="pageTitle">
-        <h1 id="pageTitle" class="text-3xl font-bold mb-6 text-center text-pink-600">Edit Gem</h1>
+    <main class="form-box">
+        <h1 class="text-3xl font-bold mb-6 text-center text-pink-600">Edit Gem</h1>
 
         <?php if ($msg): ?>
-            <div class="message-success" role="alert"><?= htmlspecialchars($msg) ?></div>
+            <div class="message-success"><?= htmlspecialchars($msg) ?></div>
         <?php endif; ?>
 
-        <form method="POST" enctype="multipart/form-data" novalidate>
-            <section class="form-columns" aria-label="Gem details">
+        <form method="POST" enctype="multipart/form-data">
+            <section class="form-columns">
 
                 <div class="form-column">
                     <div class="form-row">
-                        <label for="title">Gem Title</label>
-                        <input id="title" name="title" type="text" value="<?= htmlspecialchars($gem['title']) ?>" required />
+                        <label>Gem Title</label>
+                        <input name="title" type="text" value="<?= htmlspecialchars($gem['title']) ?>" required />
                     </div>
+
                     <div class="form-row">
-                        <label for="type">Type</label>
-                        <input id="type" name="type" type="text" value="<?= htmlspecialchars($gem['type']) ?>" required />
+                        <label>Type</label>
+                        <input name="type" type="text" value="<?= htmlspecialchars($gem['type']) ?>" required />
                     </div>
+
                     <div class="form-row">
-                        <label for="carat">Carat</label>
-                        <input id="carat" name="carat" type="number" step="0.01" value="<?= htmlspecialchars($gem['carat']) ?>" required />
+                        <label>Carat</label>
+                        <input name="carat" type="number" step="0.01" value="<?= htmlspecialchars($gem['carat']) ?>" required />
                     </div>
+
                     <div class="form-row mt-6">
-                        <label for="price">Price</label>
-                        <input id="price" name="price" type="number" step="0.01" value="<?= htmlspecialchars($gem['price']) ?>" required />
+                        <label>Price</label>
+                        <input name="price" type="number" step="0.01" value="<?= htmlspecialchars($gem['price']) ?>" required />
+                    </div>
+
+                                        <!-- DESCRIPTION FIELD -->
+                    <div class="form-row">
+                        <label>Description</label>
+                        <textarea name="description" rows="4" required><?= htmlspecialchars($gem['description']) ?></textarea>
                     </div>
                 </div>
 
                 <div class="form-column">
                     <div class="form-row">
-                        <label for="color">Color</label>
-                        <input id="color" name="color" type="text" value="<?= htmlspecialchars($gem['color']) ?>" required />
-                    </div>
-                    <div class="form-row">
-                        <label for="clarity">Clarity</label>
-                        <input id="clarity" name="clarity" type="text" value="<?= htmlspecialchars($gem['clarity']) ?>" required />
-                    </div>
-                    <div class="form-row">
-                        <label for="origin">Origin</label>
-                        <input id="origin" name="origin" type="text" value="<?= htmlspecialchars($gem['origin']) ?>" required />
+                        <label>Color</label>
+                        <input name="color" type="text" value="<?= htmlspecialchars($gem['color']) ?>" required />
                     </div>
 
-                    <div class="checkbox-row">
-                        <input id="is_negotiable" name="is_negotiable" type="checkbox" <?= $gem['is_negotiable'] ? 'checked' : '' ?> />
-                        <label for="is_negotiable">Negotiable</label>
+                    <div class="form-row">
+                        <label>Clarity</label>
+                        <input name="clarity" type="text" value="<?= htmlspecialchars($gem['clarity']) ?>" required />
                     </div>
+
+                    <div class="form-row">
+                        <label>Origin</label>
+                        <input name="origin" type="text" value="<?= htmlspecialchars($gem['origin']) ?>" required />
+                    </div>
+
+                                        <div class="checkbox-row">
+                        <input name="is_negotiable" type="checkbox" <?= $gem['is_negotiable'] ? 'checked' : '' ?> />
+                        <label>Negotiable</label>
+                    </div>
+
+                                <div class="form-row">
+                <label>Add New Images</label>
+                <input name="images[]" type="file" multiple accept="image/*" />
+            </div>
+
+
+
+
                 </div>
             </section>
 
             <fieldset>
                 <legend class="text-lg font-semibold mb-3">Existing Images</legend>
-                <div class="images-grid" aria-live="polite">
+                <div class="images-grid">
                     <?php foreach ($images as $img): ?>
                         <div class="image-wrapper">
                             <img src="<?= htmlspecialchars($img['image_path']) ?>" alt="Gem image" onclick="openLightbox('<?= htmlspecialchars($img['image_path']) ?>')" />
-                            <label class="remove-label">
+                            <label>
                                 <input type="checkbox" name="remove_images[]" value="<?= htmlspecialchars($img['id']) ?>" /> Remove
                             </label>
                         </div>
@@ -204,11 +245,8 @@ if (isset($_GET['msg'])) $msg = $_GET['msg'];
                 </div>
             </fieldset>
 
-            <div class="form-row">
-                <label for="images"> Add New Images</label>
-                <input id="images" name="images[]" type="file" multiple accept="image/*" />
-            </div>
-            <br>
+
+
             <fieldset class="mt-6">
                 <legend class="text-lg font-semibold mb-3">Certificate</legend>
 
@@ -219,49 +257,36 @@ if (isset($_GET['msg'])) $msg = $_GET['msg'];
                             <img src="<?= htmlspecialchars($gem['certificate']) ?>" alt="Certificate Image Preview" />
                         </div>
                     <?php else: ?>
-                        <p><a href="<?= htmlspecialchars($gem['certificate']) ?>" target="_blank" rel="noopener noreferrer">View Certificate PDF</a></p>
-                <?php endif;
-                endif; ?>
+                        <p><a href="<?= htmlspecialchars($gem['certificate']) ?>" target="_blank">View Certificate PDF</a></p>
+                <?php endif; endif; ?>
 
                 <div class="form-row mt-3">
-                    <label for="certificate">Upload New Certificate</label>
-                    <input id="certificate" name="certificate" type="file" accept="image/*,application/pdf" />
+                    <label>Upload New Certificate</label>
+                    <input name="certificate" type="file" accept="image/*,application/pdf" />
                 </div>
             </fieldset>
 
             <div class="button-row">
-                <button type="button" class="back-btn" aria-label="Go back to dashboard"
-                    onclick="window.location.href='../public/seller-dashboard.php'">
-                    Back
-                </button>
-
-                <button type="submit" class="submit-btn" aria-label="Save changes to gem">
-                    Save Changes
-                </button>
+                <button type="button" class="back-btn" onclick="window.location.href='../public/seller-dashboard.php'">Back</button>
+                <button type="submit" class="submit-btn">Save Changes</button>
             </div>
-
         </form>
     </main>
 
-    <div id="lightboxModal" class="lightbox" role="dialog" aria-modal="true" aria-labelledby="lightboxTitle" style="display:none;" tabindex="-1" onclick="closeLightbox()">
-        <button class="close-btn" aria-label="Close image preview" onclick="closeLightbox(event)">&times;</button>
-        <img id="lightboxImg" class="lightbox-img" alt="Image preview" />
+    <div id="lightboxModal" class="lightbox" style="display:none;" onclick="closeLightbox()">
+        <button class="close-btn" onclick="closeLightbox(event)">&times;</button>
+        <img id="lightboxImg" class="lightbox-img" />
     </div>
 
     <script>
         function openLightbox(src) {
-            const modal = document.getElementById('lightboxModal');
-            const img = document.getElementById('lightboxImg');
-            img.src = src;
-            modal.style.display = 'flex';
-            modal.focus();
+            document.getElementById('lightboxImg').src = src;
+            document.getElementById('lightboxModal').style.display = 'flex';
         }
 
         function closeLightbox(event) {
             if (event) event.stopPropagation();
-            const modal = document.getElementById('lightboxModal');
-            modal.style.display = 'none';
-            document.getElementById('lightboxImg').src = '';
+            document.getElementById('lightboxModal').style.display = 'none';
         }
     </script>
 
