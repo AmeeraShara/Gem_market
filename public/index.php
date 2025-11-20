@@ -36,6 +36,27 @@ if (isset($_SESSION['user_id'])) {
         $wishlistGemIds[] = $row['gem_id'];
     }
 }
+
+// Fetch filter values from DB
+$typeRes = $conn->query("SELECT DISTINCT type FROM gems WHERE type IS NOT NULL AND type != ''");
+$types = [];
+while ($row = $typeRes->fetch_assoc()) $types[] = $row['type'];
+
+$colorRes = $conn->query("SELECT DISTINCT color FROM gems WHERE color IS NOT NULL AND color != ''");
+$colors = [];
+while ($row = $colorRes->fetch_assoc()) $colors[] = $row['color'];
+
+$certRes = $conn->query("SELECT DISTINCT certificate FROM gems");
+$certificates = [];
+while ($row = $certRes->fetch_assoc()) {
+    $certificates[] = !empty($row['certificate']) ? 'yes' : 'no';
+}
+$certificates = array_unique($certificates);
+
+$caratRes = $conn->query("SELECT DISTINCT carat FROM gems WHERE carat IS NOT NULL");
+$carats = [];
+while ($row = $caratRes->fetch_assoc()) $carats[] = $row['carat'];
+sort($carats);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -95,7 +116,42 @@ if (isset($_SESSION['user_id'])) {
 <section class="latest-section">
   <div class="container">
     <h2>Latest Uploads</h2>
-    <div class="latest-grid">
+
+    <!-- Filters -->
+    <div class="filter-container" style="margin: 20px 0; display: flex; gap: 10px; flex-wrap: wrap;">
+      <select id="filterType">
+        <option value="">All Types</option>
+        <?php foreach($types as $t): ?>
+          <option value="<?= htmlspecialchars($t) ?>"><?= htmlspecialchars($t) ?></option>
+        <?php endforeach; ?>
+      </select>
+
+      <select id="filterCarat">
+        <option value="">Any Carat</option>
+        <?php foreach($carats as $c): ?>
+          <option value="<?= htmlspecialchars($c) ?>"><?= htmlspecialchars($c) ?> Carat</option>
+        <?php endforeach; ?>
+      </select>
+
+      <select id="filterColor">
+        <option value="">Any Color</option>
+        <?php foreach($colors as $c): ?>
+          <option value="<?= htmlspecialchars($c) ?>"><?= htmlspecialchars($c) ?></option>
+        <?php endforeach; ?>
+      </select>
+
+      <select id="filterCert">
+        <option value="">All Certifications</option>
+        <?php foreach($certificates as $cert): ?>
+          <option value="<?= $cert ?>"><?= $cert === 'yes' ? 'Certified' : 'Uncertified' ?></option>
+        <?php endforeach; ?>
+      </select>
+
+      <input type="text" id="filterLocation" placeholder="Location" />
+    </div>
+
+    <!-- Gems grid -->
+    <div class="latest-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px;">
       <?php foreach ($latestGems as $gem):
             $imgPath = $imagesByGem[$gem['id']] ?? "https://via.placeholder.com/400x500?text=No+Image";
             $hasCert = !empty($gem['certificate']);
@@ -133,28 +189,9 @@ if (isset($_SESSION['user_id'])) {
   </div>
 </section>
 
-<footer>
-  <div class="container footer-grid">
-    <div>
-      <h3>GemMarketplace</h3>
-      <p>Connecting buyers and sellers of premium gemstones globally.</p>
-    </div>
-    <div>
-      <h3>Links</h3>
-      <ul>
-        <li><a href="#">Home</a></li>
-        <li><a href="#">Browse Gems</a></li>
-        <li><a href="#">Blog</a></li>
-      </ul>
-    </div>
-    <div>
-      <h3>Contact</h3>
-      <p>Email: support@gemmarketplace.com</p>
-      <p>Phone: +1 234 567 890</p>
-    </div>
-  </div>
-  <div class="footer-copy">&copy; 2025 GemMarketplace. All rights reserved.</div>
-</footer>
+
+<?php include __DIR__ . '/footer.php'; ?>
+
 
 <script>
 document.querySelectorAll('.wishlist-btn').forEach(button => {
@@ -183,6 +220,25 @@ document.querySelectorAll('.wishlist-btn').forEach(button => {
     .catch(() => alert('Error updating wishlist'));
   });
 });
+function fetchFilteredGems() {
+    const type = document.getElementById('filterType').value;
+    const carat = document.getElementById('filterCarat').value;
+    const color = document.getElementById('filterColor').value;
+    const cert = document.getElementById('filterCert').value;
+    const location = document.getElementById('filterLocation').value;
+
+    const params = new URLSearchParams({ type, carat, color, cert, location });
+
+    fetch('fetch_gems.php?' + params.toString())
+        .then(res => res.text())
+        .then(html => {
+            document.querySelector('.latest-grid').innerHTML = html;
+        });
+}
+
+// Attach event listeners
+document.querySelectorAll('#filterType, #filterCarat, #filterColor, #filterCert, #filterLocation')
+    .forEach(el => el.addEventListener('change', fetchFilteredGems));
 </script>
 
 </body>

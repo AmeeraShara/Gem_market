@@ -328,3 +328,31 @@ footer {
         font-size: 14px;
     }
 }
+/* FILTER CONTAINER - horizontal row of buttons */
+.filter-container {
+    display: flex;
+    gap: 12px;        /* spacing between buttons */
+    margin: 20px 0;
+    flex-wrap: wrap;   /* wrap on small screens if needed */
+}
+
+/* FILTER BUTTONS */
+.filter-container select,
+.filter-container input {
+    padding: 10px 16px;
+    border: none;         
+    background: #F9A8D4;     
+    font-size: 16px;
+    border-radius: 6px;   
+    outline: none;
+    cursor: pointer;
+    color: #111;           
+}
+
+.filter-container select:hover,
+.filter-container input:hover,
+.filter-container select:focus,
+.filter-container input:focus {
+    color: #DB2777;       
+    border-bottom: 2px solid #DB2777;
+}
