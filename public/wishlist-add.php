@@ -3,9 +3,13 @@ session_start();
 include __DIR__ . '/../config/db.php';
 
 if (!isset($_SESSION['user_id'])) {
-    echo json_encode(['status' => 'error', 'message' => 'Not logged in']);
+    echo json_encode([
+        'status' => 'not_logged_in', 
+        'message' => 'You must log in to save gems to your wishlist!'
+    ]);
     exit;
 }
+
 
 $user_id = $_SESSION['user_id'];
 $gem_id = isset($_POST['gem_id']) ? (int)$_POST['gem_id'] : 0;

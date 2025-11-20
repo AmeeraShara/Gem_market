@@ -2,7 +2,6 @@
 session_start();
 include __DIR__ . '/../config/db.php';
 
-// Fetch last 4 approved gems with seller info
 $sqlLatest = "
     SELECT g.*, u.full_name AS seller_name
     FROM gems g
@@ -20,7 +19,6 @@ while ($gem = mysqli_fetch_assoc($resLatest)) {
     $gemIds[] = $gem['id'];
 }
 
-// Fetch first image for each gem in batch
 $imagesByGem = [];
 if (!empty($gemIds)) {
     $ids = implode(',', array_map('intval', $gemIds));
@@ -30,7 +28,6 @@ if (!empty($gemIds)) {
     }
 }
 
-// Fetch wishlist items for logged in user
 $wishlistGemIds = [];
 if (isset($_SESSION['user_id'])) {
     $userId = intval($_SESSION['user_id']);
@@ -52,7 +49,6 @@ if (isset($_SESSION['user_id'])) {
 </head>
 <body>
 
-<!-- Header -->
 <header>
   <div class="container header-container">
     <a href="#" class="logo">Gem</a>
@@ -63,13 +59,16 @@ if (isset($_SESSION['user_id'])) {
       <?php if (!isset($_SESSION['user_id'])): ?>
         <a href="login.php">Login</a>
       <?php else: ?>
-        <a href="logout.php">Logout</a>
+<?php if (isset($_SESSION['user_id'])): ?>
+    <a href="logout.php">Logout</a>
+<?php else: ?>
+    <a href="login.php">Login</a>
+<?php endif; ?>
       <?php endif; ?>
     </nav>
   </div>
 </header>
 
-<!-- Hero Section -->
 <section class="hero-section">
   <div class="hero-grid">
     <div class="hero-main">
@@ -93,7 +92,6 @@ if (isset($_SESSION['user_id'])) {
   </div>
 </section>
 
-<!-- Latest Uploads Section -->
 <section class="latest-section">
   <div class="container">
     <h2>Latest Uploads</h2>
@@ -135,7 +133,6 @@ if (isset($_SESSION['user_id'])) {
   </div>
 </section>
 
-<!-- Footer -->
 <footer>
   <div class="container footer-grid">
     <div>
@@ -174,9 +171,7 @@ document.querySelectorAll('.wishlist-btn').forEach(button => {
     .then(res => res.json())
     .then(data => {
       if (data.status === 'success') {
-        // Toggle class to change color
         button.classList.toggle('active');
-        // Update tooltip/title
         button.setAttribute(
           'title',
           button.classList.contains('active') ? 'Remove from wishlist' : 'Add to wishlist'
@@ -188,7 +183,6 @@ document.querySelectorAll('.wishlist-btn').forEach(button => {
     .catch(() => alert('Error updating wishlist'));
   });
 });
-
 </script>
 
 </body>
