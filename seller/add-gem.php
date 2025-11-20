@@ -130,8 +130,17 @@ if (isset($_POST['submit'])) {
 
           <div class="form-row">
             <label>Type</label>
-            <input type="text" name="type" required>
+            <select name="type" required>
+              <option value="">Select Type</option>
+              <option value="diamond">Diamond</option>
+              <option value="ruby">Ruby</option>
+              <option value="sapphire">Sapphire</option>
+              <option value="emerald">Emerald</option>
+              <option value="topaz">Topaz</option>
+              <option value="other">Other</option>
+            </select>
           </div>
+
 
           <div class="form-row">
             <label>Carat</label>
@@ -140,8 +149,20 @@ if (isset($_POST['submit'])) {
 
           <div class="form-row">
             <label>Color</label>
-            <input type="text" name="color" required>
+            <select name="color" required>
+              <option value="">Select Color</option>
+              <option value="white">White</option>
+              <option value="yellow">Yellow</option>
+              <option value="blue">Blue</option>
+              <option value="red">Red</option>
+              <option value="green">Green</option>
+              <option value="pink">Pink</option>
+              <option value="purple">Purple</option>
+              <option value="orange">Orange</option>
+              <option value="other">Other</option>
+            </select>
           </div>
+
 
         </div>
 
@@ -149,13 +170,31 @@ if (isset($_POST['submit'])) {
 
           <div class="form-row">
             <label>Clarity</label>
-            <input type="text" name="clarity" required>
+            <select name="clarity" required>
+              <option value="">Select Clarity</option>
+              <option value="flawless">Flawless (FL)</option>
+              <option value="internally_flawless">Internally Flawless (IF)</option>
+              <option value="very_very_slight_inclusions">Very Very Slight Inclusions (VVS1, VVS2)</option>
+              <option value="very_slight_inclusions">Very Slight Inclusions (VS1, VS2)</option>
+              <option value="slight_inclusions">Slight Inclusions (SI1, SI2)</option>
+              <option value="included">Included (I1, I2, I3)</option>
+            </select>
           </div>
+
 
           <div class="form-row">
             <label>Origin</label>
-            <input type="text" name="origin" required>
+            <select name="origin" required>
+              <option value="">Select Origin</option>
+              <option value="sri_lanka">Sri Lanka</option>
+              <option value="india">India</option>
+              <option value="brazil">Brazil</option>
+              <option value="africa">Africa</option>
+              <option value="australia">Australia</option>
+              <option value="other">Other</option>
+            </select>
           </div>
+
 
           <div class="form-row">
             <label>Price</label>
