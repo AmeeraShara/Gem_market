@@ -5,15 +5,15 @@ body {
     padding: 20px;
 }
 
-/* NAVIGATION BAR*/
 nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
     background: #F9A8D4;
-    padding: 10px 20px;
-    border-radius: 10px;
+    padding: 12px 25px;
+    border-radius: 12px;
     margin-bottom: 20px;
+    flex-wrap: wrap;
 }
 
 nav div:first-child {
@@ -27,129 +27,169 @@ nav a {
     text-decoration: none;
     font-weight: bold;
     margin-right: 15px;
+    margin-top: 5px;
 }
 
 nav a:last-child {
     color: red;
 }
 
-/* TABLE STYLING*/
 table {
     width: 100%;
     border-collapse: collapse;
-    background: white;
-    border-radius: 10px;
+    background: #fff;
+    border-radius: 12px;
     overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
 }
 
 thead tr {
     background: #F3F4F6;
 }
 
-th, td {
-    border: 1px solid #ddd;
-    padding: 10px;
-    font-size: 14px;
-}
-
+th,
 td {
-    background: #fff;
+    border: 1px solid #ddd;
+    padding: 12px;
+    font-size: 14px;
 }
 
 tbody tr:hover {
     background: #FDF2F8;
 }
 
-/* BUTTONS */
-.view-btn {
-    background: #EC4899;
-    color: white;
+.view-btn,
+.action-btn {
     border: none;
+    border-radius: 8px;
     padding: 6px 12px;
-    border-radius: 6px;
     cursor: pointer;
     font-size: 13px;
+    font-weight: 600;
+    color: white;
     transition: 0.3s;
+}
+
+.view-btn {
+    background: #EC4899;
 }
 
 .view-btn:hover {
     background: #DB2777;
 }
 
-a.edit-link {
-    color: blue;
-    text-decoration: underline;
+.action-btn.edit {
+    background: #16A34A;
 }
 
-a.delete-link {
-    color: red;
-    text-decoration: underline;
+.action-btn.edit:hover {
+    background: #166534;
 }
 
-/*GEM DETAILS MODAL */
+.action-btn.delete {
+    background: #DC2626;
+}
+
+.action-btn.delete:hover {
+    background: #991B1B;
+}
+
 #gemModal {
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.85);
+    background: rgba(0, 0, 0, 0.85);
     justify-content: center;
     align-items: center;
     z-index: 50;
     padding: 20px;
+    overflow: auto;
 }
 
-#gemModal .modal-content {
-    background: white;
-    padding: 25px;
-    border-radius: 12px;
-    max-width: 700px;
-    width: 100%;
+.modal-content {
+    background: #FDF2F8;
+    border-radius: 18px;
+    max-width: 1100px;
+    width: 95%;
+    padding: 40px;
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+    border: 2px solid #F9A8D4;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
     position: relative;
 }
 
+.modal-column {
+    flex: 1 1 400px;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
 #modalClose {
-    cursor: pointer;
-    font-size: 24px;
     position: absolute;
-    right: 15px;
-    top: 10px;
-    color: #333;
-}
-
-#modalImages img {
-    width: 90px;
-    height: 90px;
-    object-fit: cover;
+    top: 15px;
+    right: 20px;
+    font-size: 28px;
+    font-weight: bold;
+    color: #DB2777;
     cursor: pointer;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    margin: 4px;
-    transition: transform 0.2s;
 }
 
-#modalImages img:hover {
+.modal-content input,
+.modal-content textarea {
+    width: 100%;
+    padding: 16px;
+    border-radius: 12px;
+    border: 1.5px solid #F9A8D4;
+    font-size: 16px;
+    background: #fff;
+}
+
+.modal-content input:focus,
+.modal-content textarea:focus {
+    outline: none;
+    border-color: #DB2777;
+    box-shadow: 0 0 6px #F9A8D4;
+}
+
+.modal-images img,
+.modal-videos video {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #F9A8D4;
+    cursor: pointer;
+    transition: transform 0.2s;
+    margin: 5px;
+}
+
+.modal-images img:hover,
+.modal-videos video:hover {
     transform: scale(1.05);
 }
 
-/* IMAGE ZOOM MODAL */
-#imgModal {
+#mediaModal {
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.85);
+    background: rgba(0, 0, 0, 0.85);
     justify-content: center;
     align-items: center;
-    z-index: 100;
+    z-index: 60;
 }
 
-#modalImg {
+#modalImg,
+#modalVideo {
     max-width: 90%;
     max-height: 90%;
+    border-radius: 12px;
     border: 5px solid #fff;
-    border-radius: 10px;
 }
 
-/* STATUS COLORS */
 .status-approved {
     color: green;
     font-weight: bold;
@@ -165,65 +205,56 @@ a.delete-link {
     font-weight: bold;
 }
 
-.action-btn {
-    padding: 6px 12px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 13px;
-    font-weight: 600;
-    margin: 2px;
-    color: white;
-    transition: 0.25s;
-}
-
-/* VIEW BUTTON - Blue */
-.action-btn.view {
-    background-color: #2563EB;
-}
-.action-btn.view:hover {
-    background-color: #1E40AF;
-}
-
-/* EDIT BUTTON - Green */
-.action-btn.edit {
-    background-color: #16A34A;
-}
-.action-btn.edit:hover {
-    background-color: #166534;
-}
-
-/* DELETE BUTTON - Red */
-.action-btn.delete {
-    background-color: #DC2626;
-}
-.action-btn.delete:hover {
-    background-color: #991B1B;
-}
-
-/*RESPONSIVE TABLE */
-@media (max-width: 700px) {
-    th, td {
-        font-size: 12px;
-        padding: 6px;
-    }
-
+@media (max-width: 900px) {
     nav {
         flex-direction: column;
         gap: 10px;
         text-align: center;
     }
 
-    nav a {
-        margin-right: 10px;
+    table {
+        font-size: 12px;
     }
 
-    #gemModal .modal-content {
+    th,
+    td {
+        padding: 8px;
+    }
+
+    .modal-content {
+        flex-direction: column;
+        padding: 25px;
+    }
+
+    .modal-column {
+        min-width: 100%;
+    }
+
+    .modal-images img,
+    .modal-videos video {
+        width: 70px;
+        height: 70px;
+    }
+}
+
+@media (max-width: 450px) {
+    body {
+        padding: 10px;
+    }
+
+    .modal-content {
         padding: 15px;
     }
 
-    #modalImages img {
-        width: 70px;
-        height: 70px;
+    .modal-content input,
+    .modal-content textarea {
+        padding: 12px;
+        font-size: 14px;
+    }
+
+    .modal-images img,
+    .modal-videos video {
+        width: 60px;
+        height: 60px;
     }
 }

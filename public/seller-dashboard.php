@@ -12,7 +12,7 @@ $seller_id = $_SESSION['user_id'];
 
 // Fetch gems including deactivated ones
 $stmt = $conn->prepare("
-    SELECT id, title, type, carat, color, clarity, origin, certificate, 
+    SELECT id, title, type, carat, color, clarity, origin, certificate, description,
            price, is_negotiable, status
     FROM gems
     WHERE seller_id = ?
@@ -23,6 +23,7 @@ $stmt->execute();
 $gems = $stmt->get_result();
 ?>
 <link rel="stylesheet" href="../public/css/seller-gem-list.css">
+
 
 <!-- NAVIGATION -->
 <nav style="display:flex; justify-content:space-between; align-items:center; background:#F9A8D4; padding:10px 20px; border-radius:8px; margin-bottom:20px;">
@@ -89,7 +90,7 @@ $gems = $stmt->get_result();
                     ?>
                 </td>
                 <td style="border:1px solid #ccc; padding:6px; text-align:center;">
-                    <?php if($g['status'] === 'deactivated'): ?>
+                    <?php if ($g['status'] === 'deactivated'): ?>
                         <span style="color:red; font-weight:bold;">Deactivated</span>
                     <?php else: ?>
                         <button class="view-btn"
@@ -101,6 +102,7 @@ $gems = $stmt->get_result();
                             data-origin="<?= htmlspecialchars($g['origin']) ?>"
                             data-price="<?= number_format($g['price'], 2) ?>"
                             data-negotiable="<?= $g['is_negotiable'] ?>"
+                            data-description="<?= htmlspecialchars($g['description']) ?>"
                             data-certificate="<?= htmlspecialchars($certPath) ?>"
                             data-images='<?= json_encode($imgArray) ?>'
                             data-videos='<?= json_encode($vdoArray) ?>'>View</button>
@@ -121,140 +123,184 @@ $gems = $stmt->get_result();
 <div id="msg" style="margin-top:10px; font-weight:bold;"></div>
 
 <!-- Modal for gem details -->
-<div id="gemModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); overflow:auto; justify-content:center; align-items:center; z-index:50; padding:20px;">
-    <div style="background:#fff; border-radius:8px; max-width:700px; width:100%; padding:20px; position:relative;">
-        <span id="modalClose" style="position:absolute; top:10px; right:15px; font-size:22px; cursor:pointer;">&times;</span>
-        <h2 id="modalTitle"></h2>
-        <p><strong>Type:</strong> <span id="modalType"></span></p>
-        <p><strong>Carat:</strong> <span id="modalCarat"></span></p>
-        <p><strong>Color:</strong> <span id="modalColor"></span></p>
-        <p><strong>Clarity:</strong> <span id="modalClarity"></span></p>
-        <p><strong>Origin:</strong> <span id="modalOrigin"></span></p>
-        <p><strong>Price:</strong> Rs <span id="modalPrice"></span> <span id="modalNegotiable" style="color:green;"></span></p>
-        <p><strong>Certificate:</strong> <span id="modalCertificate"></span></p>
-        <p><strong>Images:</strong></p>
-        <div id="modalImages" style="display:flex; flex-wrap:wrap; gap:5px;"></div>
-        <p><strong>Videos:</strong></p>
-        <div id="modalVideos" style="display:flex; flex-wrap:wrap; gap:5px;"></div>
+<div id="gemModal">
+    <div class="modal-content">
+        <span id="modalClose">&times;</span>
+
+        <!-- Column 1 -->
+        <div class="modal-column">
+            <label>Title</label>
+            <input type="text" id="modalTitle" readonly>
+
+            <label>Type</label>
+            <input type="text" id="modalType" readonly>
+
+            <label>Price</label>
+            <input type="text" id="modalPrice" readonly>
+
+            <label>Certificate</label>
+            <div id="modalCertificate"></div>
+
+                        <label>Images</label>
+            <div class="modal-images" id="modalImages"></div>
+
+            <label>Videos</label>
+            <div class="modal-videos" id="modalVideos"></div>
+        </div>
+
+        <!-- Column 2 -->
+        <div class="modal-column">
+            <label>Carat</label>
+            <input type="text" id="modalCarat" readonly>
+
+            <label>Color</label>
+            <input type="text" id="modalColor" readonly>
+
+            <label>Clarity</label>
+            <input type="text" id="modalClarity" readonly>
+
+            <label>Origin</label>
+            <input type="text" id="modalOrigin" readonly>
+
+            <label>Negotiable</label>
+            <input type="text" id="modalNegotiable" readonly>
+
+            <label>Description</label>
+            <textarea id="modalDescription" rows="4" readonly></textarea>
+
+
+        </div>
     </div>
 </div>
 
-<!-- Modal for viewing larger images/videos -->
-<div id="mediaModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); justify-content:center; align-items:center; z-index:60;" onclick="this.style.display='none'">
-    <video id="modalVideo" src="" controls style="max-width:90%; max-height:90%; border:5px solid #fff; border-radius:10px; display:none;"></video>
-    <img id="modalImg" src="" style="max-width:90%; max-height:90%; border:5px solid #fff; border-radius:10px;">
+
+<!-- Media Modal -->
+<div id="mediaModal" onclick="this.style.display='none'">
+    <video id="modalVideo" controls style="display:none;"></video>
+    <img id="modalImg">
 </div>
 
+
 <script>
-const gemModal = document.getElementById('gemModal');
-const modalClose = document.getElementById('modalClose');
+    const gemModal = document.getElementById('gemModal');
+    const modalClose = document.getElementById('modalClose');
 
-document.querySelectorAll('.view-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-        gemModal.style.display = 'flex';
-        document.getElementById('modalTitle').innerText = btn.dataset.title;
-        document.getElementById('modalType').innerText = btn.dataset.type;
-        document.getElementById('modalCarat').innerText = btn.dataset.carat;
-        document.getElementById('modalColor').innerText = btn.dataset.color;
-        document.getElementById('modalClarity').innerText = btn.dataset.clarity;
-        document.getElementById('modalOrigin').innerText = btn.dataset.origin;
-        document.getElementById('modalPrice').innerText = btn.dataset.price;
-        document.getElementById('modalNegotiable').innerText = btn.dataset.negotiable == 1 ? '(Negotiable)' : '';
+    document.querySelectorAll('.view-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const gemModal = document.getElementById('gemModal');
+            gemModal.style.display = 'flex';
 
-        // Certificate
-        const certSpan = document.getElementById('modalCertificate');
-        if (btn.dataset.certificate) {
-            const ext = btn.dataset.certificate.split('.').pop().toLowerCase();
-            if (['jpg','jpeg','png','gif'].includes(ext)) {
-                certSpan.innerHTML = `<img src="${btn.dataset.certificate}" style="width:80px;height:80px;object-fit:cover;cursor:pointer;" onclick="openMediaModal('${btn.dataset.certificate}','image')">`;
-            } else {
-                certSpan.innerHTML = `<a href="${btn.dataset.certificate}" target="_blank">View PDF</a>`;
-            }
-        } else {
-            certSpan.innerText = 'N/A';
-        }
+            // Fill inputs
+            document.getElementById('modalTitle').value = btn.dataset.title;
+            document.getElementById('modalType').value = btn.dataset.type;
+            document.getElementById('modalCarat').value = btn.dataset.carat;
+            document.getElementById('modalColor').value = btn.dataset.color;
+            document.getElementById('modalClarity').value = btn.dataset.clarity;
+            document.getElementById('modalOrigin').value = btn.dataset.origin;
+            document.getElementById('modalPrice').value = btn.dataset.price;
+            document.getElementById('modalNegotiable').value = btn.dataset.negotiable == 1 ? 'Yes' : 'No';
+            document.getElementById('modalDescription').value = btn.dataset.description || 'N/A';
 
-        // Images
-        const imagesDiv = document.getElementById('modalImages');
-        imagesDiv.innerHTML = '';
-        const imgs = JSON.parse(btn.dataset.images);
-        imgs.forEach(src => {
-            const imgEl = document.createElement('img');
+            // Certificate
+            const certSpan = document.getElementById('modalCertificate');
+            if (btn.dataset.certificate) {
+                const ext = btn.dataset.certificate.split('.').pop().toLowerCase();
+                if (['jpg', 'jpeg', 'png', 'gif'].includes(ext)) {
+                    certSpan.innerHTML = `<img src="${btn.dataset.certificate}" style="width:80px;height:80px;object-fit:cover;cursor:pointer;" onclick="openMediaModal('${btn.dataset.certificate}','image')">`;
+                } else {
+                    certSpan.innerHTML = `<a href="${btn.dataset.certificate}" target="_blank">View PDF</a>`;
+                }
+            } else certSpan.innerText = 'N/A';
+
+            // Images
+            const imagesDiv = document.getElementById('modalImages');
+            imagesDiv.innerHTML = '';
+            JSON.parse(btn.dataset.images).forEach(src => {
+                const imgEl = document.createElement('img');
+                imgEl.src = src;
+                imgEl.onclick = () => openMediaModal(src, 'image');
+                imagesDiv.appendChild(imgEl);
+            });
+
+            // Videos
+            const videosDiv = document.getElementById('modalVideos');
+            videosDiv.innerHTML = '';
+            JSON.parse(btn.dataset.videos).forEach(src => {
+                const videoEl = document.createElement('video');
+                videoEl.src = src;
+                videoEl.controls = true;
+                videoEl.onclick = () => openMediaModal(src, 'video');
+                videosDiv.appendChild(videoEl);
+            });
+        });
+    });
+
+    function openMediaModal(src, type) {
+        const mediaModal = document.getElementById('mediaModal');
+        const imgEl = document.getElementById('modalImg');
+        const videoEl = document.getElementById('modalVideo');
+
+        if (type === 'image') {
             imgEl.src = src;
-            imgEl.style.width = '80px';
-            imgEl.style.height = '80px';
-            imgEl.style.objectFit = 'cover';
-            imgEl.style.cursor = 'pointer';
-            imgEl.style.border = '1px solid #ccc';
-            imgEl.style.borderRadius = '4px';
-            imgEl.style.margin = '2px';
-            imgEl.onclick = () => openMediaModal(src,'image');
-            imagesDiv.appendChild(imgEl);
-        });
-
-        // Videos
-        const videosDiv = document.getElementById('modalVideos');
-        videosDiv.innerHTML = '';
-        const vdos = JSON.parse(btn.dataset.videos);
-        vdos.forEach(src => {
-            const videoEl = document.createElement('video');
+            imgEl.style.display = 'block';
+            videoEl.style.display = 'none';
+        } else {
             videoEl.src = src;
-            videoEl.controls = true;
-            videoEl.style.width = '150px';
-            videoEl.style.height = '100px';
-            videoEl.style.objectFit = 'cover';
-            videoEl.style.margin = '2px';
-            videoEl.style.cursor = 'pointer';
-            videoEl.onclick = () => openMediaModal(src,'video');
-            videosDiv.appendChild(videoEl);
+            videoEl.style.display = 'block';
+            imgEl.style.display = 'none';
+        }
+        mediaModal.style.display = 'flex';
+    }
+
+    document.getElementById('modalClose').onclick = () => document.getElementById('gemModal').style.display = 'none';
+
+
+    modalClose.onclick = () => gemModal.style.display = 'none';
+    window.onclick = (e) => {
+        if (e.target == gemModal) gemModal.style.display = 'none';
+    };
+
+    function openMediaModal(src, type) {
+        const mediaModal = document.getElementById('mediaModal');
+        const imgEl = document.getElementById('modalImg');
+        const videoEl = document.getElementById('modalVideo');
+
+        if (type === 'image') {
+            imgEl.src = src;
+            imgEl.style.display = 'block';
+            videoEl.style.display = 'none';
+        } else {
+            videoEl.src = src;
+            videoEl.style.display = 'block';
+            imgEl.style.display = 'none';
+        }
+        mediaModal.style.display = 'flex';
+    }
+
+    // AJAX soft delete
+    document.querySelectorAll('.action-btn.delete').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const gemId = btn.dataset.id;
+            if (!confirm('Are you sure you want to deactivate this gem?')) return;
+
+            fetch(`../seller/delete-gem.php?id=${gemId}`)
+                .then(res => res.text())
+                .then(msg => {
+                    alert(msg);
+
+                    const row = btn.closest('tr');
+
+                    // Disable all buttons/links
+                    row.querySelectorAll('button, a').forEach(el => el.disabled = true);
+
+                    // Replace Actions column
+                    const actionCell = row.querySelector('td:last-child');
+                    actionCell.innerHTML = '<span style="color:red; font-weight:bold;">Deactivated</span>';
+
+                    // Gray out row
+                    row.style.opacity = '0.5';
+                })
+                .catch(err => alert('AJAX error: ' + err));
         });
     });
-});
-
-modalClose.onclick = () => gemModal.style.display = 'none';
-window.onclick = (e) => { if(e.target==gemModal) gemModal.style.display='none'; };
-
-function openMediaModal(src,type){
-    const mediaModal = document.getElementById('mediaModal');
-    const imgEl = document.getElementById('modalImg');
-    const videoEl = document.getElementById('modalVideo');
-
-    if(type === 'image'){
-        imgEl.src = src;
-        imgEl.style.display = 'block';
-        videoEl.style.display = 'none';
-    } else {
-        videoEl.src = src;
-        videoEl.style.display = 'block';
-        imgEl.style.display = 'none';
-    }
-    mediaModal.style.display='flex';
-}
-
-// AJAX soft delete
-document.querySelectorAll('.action-btn.delete').forEach(btn => {
-    btn.addEventListener('click', () => {
-        const gemId = btn.dataset.id;
-        if (!confirm('Are you sure you want to deactivate this gem?')) return;
-
-        fetch(`../seller/delete-gem.php?id=${gemId}`)
-        .then(res => res.text())
-        .then(msg => {
-            alert(msg);
-
-            const row = btn.closest('tr');
-
-            // Disable all buttons/links
-            row.querySelectorAll('button, a').forEach(el => el.disabled = true);
-
-            // Replace Actions column
-            const actionCell = row.querySelector('td:last-child');
-            actionCell.innerHTML = '<span style="color:red; font-weight:bold;">Deactivated</span>';
-
-            // Gray out row
-            row.style.opacity = '0.5';
-        })
-        .catch(err => alert('AJAX error: ' + err));
-    });
-});
 </script>

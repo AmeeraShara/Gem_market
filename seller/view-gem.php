@@ -41,6 +41,8 @@ $videos = $stmtVdo->get_result();
 <p><strong>Clarity:</strong> <?= htmlspecialchars($gem['clarity']) ?></p>
 <p><strong>Origin:</strong> <?= htmlspecialchars($gem['origin']) ?></p>
 <p><strong>Price:</strong> Rs <?= number_format($gem['price'],2) ?> <?= $gem['is_negotiable'] ? '(Negotiable)' : '' ?></p>
+<p><strong>Description:</strong> <?= nl2br(htmlspecialchars($gem['description'] ?? 'N/A')) ?></p>
+
 <p><strong>Status:</strong> <?= ucfirst($gem['status']) ?></p>
 
 <!-- Certificate -->
