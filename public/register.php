@@ -3,20 +3,42 @@ include __DIR__ . '/../config/db.php';
 
 if (isset($_POST['register'])) {
 
-    $name  = $_POST['name'];
-    $email = $_POST['email'];
-    $pwd   = password_hash($_POST['password'], PASSWORD_DEFAULT);
-    $role  = $_POST['role'];
+    // Sanitize inputs
+    $full_name = mysqli_real_escape_string($conn, $_POST['name']);
+    $email     = mysqli_real_escape_string($conn, $_POST['email']);
+    $phone     = !empty($_POST['phone']) ? mysqli_real_escape_string($conn, $_POST['phone']) : null;
+    $password  = password_hash($_POST['password'], PASSWORD_DEFAULT);
+    $role      = $_POST['role'];
+    $language  = $_POST['language'] ?? 'en';
+    $is_verified = 0;
 
-    $sql = "INSERT INTO users (name, email, password, role)
-            VALUES ('$name', '$email', '$pwd', '$role')";
+    // Profile image handling
+    $profile_image = NULL;
+    if (isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] == 0) {
+        $profile_dir = "uploads/profile_images";
+        if (!is_dir($profile_dir)) mkdir($profile_dir, 0777, true);
 
-    if (!mysqli_query($conn, $sql)) {
-        die("❌ User Insert Error: " . mysqli_error($conn));
+        $profile_image = $profile_dir . "/" . time() . "_" . basename($_FILES['profile_image']['name']);
+        if (!move_uploaded_file($_FILES['profile_image']['tmp_name'], $profile_image)) {
+            die("❌ Failed to upload profile image");
+        }
     }
 
-    $user_id = mysqli_insert_id($conn);
+    // Insert user
+    $stmt = $conn->prepare("
+        INSERT INTO users (full_name, email, phone, password, role, language_preference, is_verified, profile_image)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    ");
+    $stmt->bind_param("ssssssis", $full_name, $email, $phone, $password, $role, $language, $is_verified, $profile_image);
 
+    if (!$stmt->execute()) {
+        die("❌ User Insert Error: " . $stmt->error);
+    }
+
+    $user_id = $stmt->insert_id;
+    $stmt->close();
+
+    // Seller KYC
     if ($role === "seller") {
 
         $certificate_dir = "uploads/user_reg";
@@ -27,24 +49,17 @@ if (isset($_POST['register'])) {
 
         $license = $certificate_dir . "/" . $user_id . "_license_" . basename($_FILES['license']['name']);
         $id_proof = $id_dir . "/" . $user_id . "_id_" . basename($_FILES['id_proof']['name']);
-        
-        if (!move_uploaded_file($_FILES['license']['tmp_name'], $license)) {
-            die("❌ Failed to upload NGJA license");
-        }
 
-        if (!move_uploaded_file($_FILES['id_proof']['tmp_name'], $id_proof)) {
-            die("❌ Failed to upload ID proof");
-        }
+        move_uploaded_file($_FILES['license']['tmp_name'], $license);
+        move_uploaded_file($_FILES['id_proof']['tmp_name'], $id_proof);
 
-        $kyc_sql = "INSERT INTO seller_kyc (user_id, ngja_license, id_proof)
-                    VALUES ('$user_id', '$license', '$id_proof')";
-
-        if (!mysqli_query($conn, $kyc_sql)) {
-            die("❌ KYC Insert Error: " . mysqli_error($conn));
-        }
+        $kyc_stmt = $conn->prepare("INSERT INTO seller_kyc (user_id, ngja_license, id_proof) VALUES (?, ?, ?)");
+        $kyc_stmt->bind_param("iss", $user_id, $license, $id_proof);
+        $kyc_stmt->execute();
+        $kyc_stmt->close();
     }
 
-echo "<p class='success-popup'>✔ Registration successful! Await admin approval if you are a seller.</p>";
+    echo "<p class='success-popup'>✔ Registration successful! </p>";
 }
 ?>
 
@@ -54,49 +69,86 @@ echo "<p class='success-popup'>✔ Registration successful! Await admin approval
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Register - GemMarketplace</title>
-
-<!-- Import your pink CSS -->
 <link rel="stylesheet" href="css/register.css">
 
 </head>
 
 <body>
-
 <div class="container">
 
-    <!-- LEFT IMAGE PANEL -->
-    <div class="left-panel">
-    
-    </div>
+    <div class="left-panel"></div>
 
-    <!-- RIGHT FORM PANEL -->
     <div class="right-panel">
         <div class="form-box">
-
             <h1>Register</h1>
 
             <form action="" method="POST" enctype="multipart/form-data">
 
-                <input type="text" name="name" placeholder="Full Name" required>
+                <!-- Row 1 -->
+                <div class="row">
+                    <div class="col">
+                        <input type="text" name="name" placeholder="Full Name" required>
+                    </div>
+                    <div class="col">
+                        <input type="email" name="email" placeholder="Email" required>
+                    </div>
+                </div>
 
-                <input type="email" name="email" placeholder="Email" required>
+                <!-- Row 2 -->
+                <div class="row">
+                    <div class="col">
+                        <input type="password" name="password" placeholder="Password" required>
+                    </div>
+                    <div class="col">
+                        <input type="text" name="phone" placeholder="Phone (optional)">
+                    </div>
+                </div>
 
-                <input type="password" name="password" placeholder="Password" required>
+                <!-- Row 3 -->
+                <div class="row">
+                    <div class="col">
+                        <label>Language Preference</label>
+                        <select name="language">
+                            <option value="en">English</option>
+                            <option value="si">Sinhala</option>
+                            <option value="ta">Tamil</option>
+                        </select>
+                    </div>
 
-                <select name="role" id="role" 
-                        onchange="document.getElementById('seller-kyc').style.display = this.value === 'seller' ? 'block' : 'none';">
-                    <option value="buyer">Buyer</option>
-                    <option value="seller">Seller</option>
-                    <option value="admin">Admin</option>
-                </select>
+                    <div class="col">
+                        <label>Role</label>
+                        <select name="role" 
+                            onchange="document.getElementById('seller-kyc').style.display = this.value === 'seller' ? 'block' : 'none';">
+                            <option value="buyer">Buyer</option>
+                            <option value="seller">Seller</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+                </div>
 
-                <!-- Seller KYC -->
+                <!-- Profile Image Full Row -->
+                <div class="row">
+                    <div class="col-full">
+                        <label>Profile Image (optional)</label>
+                        <input type="file" name="profile_image">
+                    </div>
+                </div>
+
+                <!-- Seller KYC Block -->
                 <div id="seller-kyc" style="display:none; margin-top:10px;">
-                    <label>NGJA License</label>
-                    <input type="file" name="license">
 
-                    <label>ID Proof</label>
-                    <input type="file" name="id_proof">
+                    <div class="row">
+                        <div class="col">
+                            <label>NGJA License</label>
+                            <input type="file" name="license">
+                        </div>
+
+                        <div class="col">
+                            <label>ID Proof</label>
+                            <input type="file" name="id_proof">
+                        </div>
+                    </div>
+
                 </div>
 
                 <button type="submit" name="register">Register</button>
@@ -104,14 +156,12 @@ echo "<p class='success-popup'>✔ Registration successful! Await admin approval
             </form>
 
             <p class="register-text">
-                Already have an account?
-                <a href="login.php">Login</a>
+                Already have an account? <a href="login.php">Login</a>
             </p>
 
         </div>
     </div>
 
 </div>
-
 </body>
 </html>
