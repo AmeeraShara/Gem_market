@@ -27,7 +27,7 @@ $gems = $stmt->get_result();
     <div style="font-weight:bold; font-size:18px; color:#DB2777;">Seller Dashboard</div>
     <div>
         <a href="gem-listings.php" style="margin-right:15px; text-decoration:none; color:#DB2777; font-weight:bold;">Gem Listings</a>
-        <a href="add-gem.php" style="margin-right:15px; text-decoration:none; color:#DB2777; font-weight:bold;">Add New Gem</a>
+        <a href="../seller/add-gem.php" style="margin-right:15px; text-decoration:none; color:#DB2777; font-weight:bold;">Add New Gem</a>
         <a href="../public/logout.php" style="text-decoration:none; color:red; font-weight:bold;">Logout</a>
     </div>
 </nav>
