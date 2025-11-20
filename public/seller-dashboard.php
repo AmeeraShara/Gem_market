@@ -50,18 +50,30 @@ $gems = $stmt->get_result();
     <tbody>
         <?php while ($g = $gems->fetch_assoc()): ?>
             <?php
-            // Fetch gem images
+            // Fetch gem images (use full path from DB)
             $stmtImg = $conn->prepare("SELECT image_path FROM gem_images WHERE gem_id = ?");
             $stmtImg->bind_param("i", $g['id']);
             $stmtImg->execute();
             $images = $stmtImg->get_result();
             $imgArray = [];
             while ($img = $images->fetch_assoc()) {
-                $imgArray[] = "../uploads/gems/" . basename($img['image_path']);
+                $imgArray[] = $img['image_path'];
             }
             $stmtImg->close();
 
-            $certPath = !empty($g['certificate']) ? "../uploads/certificates/" . basename($g['certificate']) : '';
+            // Fetch gem videos
+            $stmtVdo = $conn->prepare("SELECT video_path FROM gem_videos WHERE gem_id = ?");
+            $stmtVdo->bind_param("i", $g['id']);
+            $stmtVdo->execute();
+            $videos = $stmtVdo->get_result();
+            $vdoArray = [];
+            while ($v = $videos->fetch_assoc()) {
+                $vdoArray[] = $v['video_path'];
+            }
+            $stmtVdo->close();
+
+            // Certificate path
+            $certPath = !empty($g['certificate']) ? $g['certificate'] : '';
             ?>
             <tr style="border-bottom:1px solid #ccc; <?= $g['status'] === 'deactivated' ? 'opacity:0.5;' : '' ?>">
                 <td style="border:1px solid #ccc; padding:6px;"><?= htmlspecialchars($g['title']) ?></td>
@@ -89,8 +101,9 @@ $gems = $stmt->get_result();
                             data-origin="<?= htmlspecialchars($g['origin']) ?>"
                             data-price="<?= number_format($g['price'], 2) ?>"
                             data-negotiable="<?= $g['is_negotiable'] ?>"
-                            data-certificate="<?= $certPath ?>"
-                            data-images='<?= json_encode($imgArray) ?>'>View</button>
+                            data-certificate="<?= htmlspecialchars($certPath) ?>"
+                            data-images='<?= json_encode($imgArray) ?>'
+                            data-videos='<?= json_encode($vdoArray) ?>'>View</button>
 
                         <button class="action-btn edit"
                             onclick="window.location.href='../seller/edit-gem.php?id=<?= $g['id'] ?>'">
@@ -121,11 +134,14 @@ $gems = $stmt->get_result();
         <p><strong>Certificate:</strong> <span id="modalCertificate"></span></p>
         <p><strong>Images:</strong></p>
         <div id="modalImages" style="display:flex; flex-wrap:wrap; gap:5px;"></div>
+        <p><strong>Videos:</strong></p>
+        <div id="modalVideos" style="display:flex; flex-wrap:wrap; gap:5px;"></div>
     </div>
 </div>
 
-<!-- Modal for viewing larger images -->
-<div id="imgModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); justify-content:center; align-items:center; z-index:60;" onclick="this.style.display='none'">
+<!-- Modal for viewing larger images/videos -->
+<div id="mediaModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); justify-content:center; align-items:center; z-index:60;" onclick="this.style.display='none'">
+    <video id="modalVideo" src="" controls style="max-width:90%; max-height:90%; border:5px solid #fff; border-radius:10px; display:none;"></video>
     <img id="modalImg" src="" style="max-width:90%; max-height:90%; border:5px solid #fff; border-radius:10px;">
 </div>
 
@@ -145,11 +161,12 @@ document.querySelectorAll('.view-btn').forEach(btn => {
         document.getElementById('modalPrice').innerText = btn.dataset.price;
         document.getElementById('modalNegotiable').innerText = btn.dataset.negotiable == 1 ? '(Negotiable)' : '';
 
+        // Certificate
         const certSpan = document.getElementById('modalCertificate');
         if (btn.dataset.certificate) {
             const ext = btn.dataset.certificate.split('.').pop().toLowerCase();
             if (['jpg','jpeg','png','gif'].includes(ext)) {
-                certSpan.innerHTML = `<img src="${btn.dataset.certificate}" style="width:80px;height:80px;object-fit:cover;cursor:pointer;" onclick="openImgModal('${btn.dataset.certificate}')">`;
+                certSpan.innerHTML = `<img src="${btn.dataset.certificate}" style="width:80px;height:80px;object-fit:cover;cursor:pointer;" onclick="openMediaModal('${btn.dataset.certificate}','image')">`;
             } else {
                 certSpan.innerHTML = `<a href="${btn.dataset.certificate}" target="_blank">View PDF</a>`;
             }
@@ -157,6 +174,7 @@ document.querySelectorAll('.view-btn').forEach(btn => {
             certSpan.innerText = 'N/A';
         }
 
+        // Images
         const imagesDiv = document.getElementById('modalImages');
         imagesDiv.innerHTML = '';
         const imgs = JSON.parse(btn.dataset.images);
@@ -170,8 +188,25 @@ document.querySelectorAll('.view-btn').forEach(btn => {
             imgEl.style.border = '1px solid #ccc';
             imgEl.style.borderRadius = '4px';
             imgEl.style.margin = '2px';
-            imgEl.onclick = () => openImgModal(src);
+            imgEl.onclick = () => openMediaModal(src,'image');
             imagesDiv.appendChild(imgEl);
+        });
+
+        // Videos
+        const videosDiv = document.getElementById('modalVideos');
+        videosDiv.innerHTML = '';
+        const vdos = JSON.parse(btn.dataset.videos);
+        vdos.forEach(src => {
+            const videoEl = document.createElement('video');
+            videoEl.src = src;
+            videoEl.controls = true;
+            videoEl.style.width = '150px';
+            videoEl.style.height = '100px';
+            videoEl.style.objectFit = 'cover';
+            videoEl.style.margin = '2px';
+            videoEl.style.cursor = 'pointer';
+            videoEl.onclick = () => openMediaModal(src,'video');
+            videosDiv.appendChild(videoEl);
         });
     });
 });
@@ -179,10 +214,21 @@ document.querySelectorAll('.view-btn').forEach(btn => {
 modalClose.onclick = () => gemModal.style.display = 'none';
 window.onclick = (e) => { if(e.target==gemModal) gemModal.style.display='none'; };
 
-function openImgModal(src){
-    const imgModal = document.getElementById('imgModal');
-    document.getElementById('modalImg').src = src;
-    imgModal.style.display='flex';
+function openMediaModal(src,type){
+    const mediaModal = document.getElementById('mediaModal');
+    const imgEl = document.getElementById('modalImg');
+    const videoEl = document.getElementById('modalVideo');
+
+    if(type === 'image'){
+        imgEl.src = src;
+        imgEl.style.display = 'block';
+        videoEl.style.display = 'none';
+    } else {
+        videoEl.src = src;
+        videoEl.style.display = 'block';
+        imgEl.style.display = 'none';
+    }
+    mediaModal.style.display='flex';
 }
 
 // AJAX soft delete

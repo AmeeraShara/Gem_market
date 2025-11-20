@@ -26,6 +26,12 @@ $stmtImg = $conn->prepare("SELECT image_path FROM gem_images WHERE gem_id = ?");
 $stmtImg->bind_param("i", $gem_id);
 $stmtImg->execute();
 $images = $stmtImg->get_result();
+
+// Fetch gem videos
+$stmtVdo = $conn->prepare("SELECT video_path FROM gem_videos WHERE gem_id = ?");
+$stmtVdo->bind_param("i", $gem_id);
+$stmtVdo->execute();
+$videos = $stmtVdo->get_result();
 ?>
 
 <h2><?= htmlspecialchars($gem['title']) ?></h2>
@@ -44,7 +50,7 @@ if(!empty($gem['certificate'])) {
     $certPath = "../uploads/certificates/" . basename($gem['certificate']);
     $ext = strtolower(pathinfo($certPath, PATHINFO_EXTENSION));
     if(in_array($ext, ['jpg','jpeg','png','gif'])) {
-        echo "<img src='$certPath' style='width:100px; height:100px; object-fit:cover;' onclick=\"window.open('$certPath','_blank')\">";
+        echo "<img src='$certPath' style='width:100px; height:100px; object-fit:cover; cursor:pointer;' onclick=\"window.open('$certPath','_blank')\">";
     } else {
         echo "<a href='$certPath' target='_blank'>View PDF</a>";
     }
@@ -57,6 +63,16 @@ if(!empty($gem['certificate'])) {
 <?php while($img = $images->fetch_assoc()): 
     $imgPath = "../uploads/gems/" . basename($img['image_path']);
 ?>
-    <img src="<?= $imgPath ?>" style="width:100px; height:100px; object-fit:cover; margin:5px;" 
+    <img src="<?= $imgPath ?>" style="width:100px; height:100px; object-fit:cover; margin:5px; cursor:pointer;" 
          onclick="window.open('<?= $imgPath ?>','_blank')">
 <?php endwhile; ?>
+
+<!-- Videos -->
+<?php if($videos->num_rows > 0): ?>
+    <p><strong>Videos:</strong></p>
+    <?php while($vdo = $videos->fetch_assoc()):
+        $vdoPath = "../uploads/gem_videos/" . basename($vdo['video_path']);
+    ?>
+        <video src="<?= $vdoPath ?>" controls style="width:200px; height:120px; object-fit:cover; margin:5px;"></video>
+    <?php endwhile; ?>
+<?php endif; ?>

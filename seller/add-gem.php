@@ -19,16 +19,18 @@ if (isset($_POST['submit'])) {
   $color = $_POST['color'];
   $clarity = $_POST['clarity'];
   $origin = $_POST['origin'];
-  $description = $_POST['description']; // <-- NEW
+  $description = $_POST['description'];
   $price = $_POST['price'];
 
   // Set directories (inside public folder)
   $cert_dir = "../public/uploads/certificates/";
   $gems_dir = "../public/uploads/gems/";
+  $videos_dir = "../public/uploads/videos/";
 
   // Create directories if they don't exist
   if (!is_dir($cert_dir)) mkdir($cert_dir, 0777, true);
   if (!is_dir($gems_dir)) mkdir($gems_dir, 0777, true);
+  if (!is_dir($videos_dir)) mkdir($videos_dir, 0777, true);
 
   // Upload certificate
   $cert_name = time() . "_" . basename($_FILES['certificate']['name']);
@@ -38,7 +40,7 @@ if (isset($_POST['submit'])) {
     $msg = "Failed to upload certificate.";
   } else {
 
-    // INSERT QUERY UPDATED WITH DESCRIPTION
+    // INSERT GEM RECORD
     $stmt = $conn->prepare("INSERT INTO gems 
       (seller_id, title, type, carat, color, clarity, origin, description, certificate, price)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
@@ -62,15 +64,32 @@ if (isset($_POST['submit'])) {
     $stmt->close();
 
     // Upload gem images
-    foreach ($_FILES['images']['tmp_name'] as $key => $tmp) {
-      $img_name = time() . "_" . basename($_FILES['images']['name'][$key]);
-      $img_path = $gems_dir . $img_name;
+    if (!empty($_FILES['images']['tmp_name'])) {
+      foreach ($_FILES['images']['tmp_name'] as $key => $tmp) {
+        $img_name = time() . "_" . basename($_FILES['images']['name'][$key]);
+        $img_path = $gems_dir . $img_name;
 
-      if (move_uploaded_file($tmp, $img_path)) {
-        $stmt_img = $conn->prepare("INSERT INTO gem_images (gem_id, image_path) VALUES (?, ?)");
-        $stmt_img->bind_param("is", $gem_id, $img_path);
-        $stmt_img->execute();
-        $stmt_img->close();
+        if (move_uploaded_file($tmp, $img_path)) {
+          $stmt_img = $conn->prepare("INSERT INTO gem_images (gem_id, image_path) VALUES (?, ?)");
+          $stmt_img->bind_param("is", $gem_id, $img_path);
+          $stmt_img->execute();
+          $stmt_img->close();
+        }
+      }
+    }
+
+    // Upload gem videos
+    if (!empty($_FILES['videos']['tmp_name'])) {
+      foreach ($_FILES['videos']['tmp_name'] as $key => $tmp) {
+        $vid_name = time() . "_" . basename($_FILES['videos']['name'][$key]);
+        $vid_path = $videos_dir . $vid_name;
+
+        if (move_uploaded_file($tmp, $vid_path)) {
+          $stmt_vid = $conn->prepare("INSERT INTO gem_videos (gem_id, video_path) VALUES (?, ?)");
+          $stmt_vid->bind_param("is", $gem_id, $vid_path);
+          $stmt_vid->execute();
+          $stmt_vid->close();
+        }
       }
     }
 
@@ -85,16 +104,12 @@ if (isset($_POST['submit'])) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Add Gem - Seller Dashboard</title>
-
-  <!-- Link your external CSS -->
   <link rel="stylesheet" href="../public/css/add-gem.css">
-
 </head>
 
 <body>
 
   <div class="form-box">
-
     <h1 class="title">Add New Gem</h1>
 
     <?php if ($msg): ?>
@@ -168,11 +183,14 @@ if (isset($_POST['submit'])) {
       </div>
       <br>
 
+      <div class="form-row">
+        <label>Gem Videos (optional)</label>
+        <input type="file" name="videos[]" multiple accept="video/*">
+      </div>
+      <br>
+
       <div class="button-row">
-        <button type="button" class="back-btn" aria-label="Go back to dashboard"
-          onclick="window.location.href='../public/seller-dashboard.php'">
-          Back
-        </button>
+        <button type="button" class="back-btn" onclick="window.location.href='../public/seller-dashboard.php'">Back</button>
         <button type="submit" name="submit" class="submit-btn">Add Gem</button>
       </div>
 
