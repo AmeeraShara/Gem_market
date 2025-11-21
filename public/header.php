@@ -3,6 +3,9 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 ?>
+
+<link rel="stylesheet" href="css/header.css">
+
 <header>
   <div class="container header-container">
     <a href="#" class="logo">Gem</a>
