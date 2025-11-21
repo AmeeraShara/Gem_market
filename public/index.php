@@ -58,6 +58,9 @@ $carats = [];
 while ($row = $caratRes->fetch_assoc()) $carats[] = $row['carat'];
 sort($carats);
 ?>
+
+<?php include __DIR__ . '/header.php'; ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -71,23 +74,7 @@ sort($carats);
 <body>
 
 <header>
-  <div class="container header-container">
-    <a href="#" class="logo">Gem</a>
-    <nav class="header-nav">
-      <a href="#">Home</a>
-      <a href="#">Blog</a>
-      <a href="#">Browse Gems</a>
-      <?php if (!isset($_SESSION['user_id'])): ?>
-        <a href="login.php">Login</a>
-      <?php else: ?>
-<?php if (isset($_SESSION['user_id'])): ?>
-    <a href="logout.php">Logout</a>
-<?php else: ?>
-    <a href="login.php">Login</a>
-<?php endif; ?>
-      <?php endif; ?>
-    </nav>
-  </div>
+
 </header>
 
 <section class="hero-section">
