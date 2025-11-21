@@ -3,13 +3,17 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 ?>
-
 <link rel="stylesheet" href="css/header.css">
 
 <header>
-  <div class="container header-container">
-    <a href="#" class="logo">Gem</a>
+  <div class="header-container">
+    <!-- LOGO -->
+    <a href="index.php" class="logo">Gem</a>
 
+    <!-- HAMBURGER BUTTON FOR MOBILE -->
+    <button class="menu-toggle" aria-label="Toggle Menu">&#9776;</button>
+
+    <!-- NAVIGATION -->
     <nav class="header-nav">
       <a href="index.php">Home</a>
       <a href="blog.php">Blog</a>
@@ -22,6 +26,15 @@ if (session_status() === PHP_SESSION_NONE) {
           <a href="login.php">Login</a>
       <?php endif; ?>
     </nav>
-
   </div>
 </header>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const menuToggle = document.querySelector('.menu-toggle');
+    const headerNav = document.querySelector('.header-nav');
+
+    menuToggle.addEventListener('click', () => {
+      headerNav.classList.toggle('active');
+    });
+  });
+</script>
