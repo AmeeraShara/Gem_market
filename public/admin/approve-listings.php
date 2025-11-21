@@ -27,7 +27,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'], $_POST['status']
 
 // Fetch pending gems with seller info
 $pending_gems = $conn->query("
-    SELECT g.*, u.name AS seller_name 
+    SELECT g.*, u.full_name AS seller_name 
     FROM gems g
     JOIN users u ON g.seller_id = u.id
     WHERE g.status='pending'

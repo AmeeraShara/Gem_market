@@ -27,7 +27,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'], $_POST['status']
 
 // Fetch pending sellers
 $stmt = $conn->prepare("
-    SELECT k.id, u.name, u.email, k.ngja_license, k.id_proof
+    SELECT k.id, u.full_name, u.email, k.ngja_license, k.id_proof
     FROM seller_kyc k
     JOIN users u ON k.user_id = u.id
     WHERE k.status='pending'
@@ -51,7 +51,7 @@ $result = $stmt->get_result();
     <tbody>
         <?php while($row = $result->fetch_assoc()) { ?>
         <tr id="sellerRow_<?php echo $row['id']; ?>">
-            <td style="border:1px solid #ccc; padding:6px;"><?php echo htmlspecialchars($row['name']); ?></td>
+            <td style="border:1px solid #ccc; padding:6px;"><?php echo htmlspecialchars($row['full_name']); ?></td>
             <td style="border:1px solid #ccc; padding:6px;"><?php echo htmlspecialchars($row['email']); ?></td>
 
             <td style="border:1px solid #ccc; padding:6px; text-align:center;">

@@ -20,7 +20,6 @@ if (session_status() === PHP_SESSION_NONE) {
       <a href="browse_gems.php">Browse Gems</a>
 
       <?php if (isset($_SESSION['user_id'])): ?>
-          <a href="wishlist.php">Wishlist</a>
           <a href="logout.php">Logout</a>
       <?php else: ?>
           <a href="login.php">Login</a>
