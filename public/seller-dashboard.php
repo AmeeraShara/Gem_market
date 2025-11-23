@@ -21,37 +21,33 @@ $stmt = $conn->prepare("
 $stmt->bind_param("i", $seller_id);
 $stmt->execute();
 $gems = $stmt->get_result();
+
+
 ?>
+
+<?php  include "../seller/seller_header.php";
+ ?>
+
 <link rel="stylesheet" href="../public/css/seller-gem-list.css">
 
 
-<!-- NAVIGATION -->
-<nav style="display:flex; justify-content:space-between; align-items:center; background:#F9A8D4; padding:10px 20px; border-radius:8px; margin-bottom:20px;">
-    <div style="font-weight:bold; font-size:18px; color:#DB2777;">Seller Dashboard</div>
-    <div>
-        <a href="gem-listings.php" style="margin-right:15px; text-decoration:none; color:#DB2777; font-weight:bold;">Gem Listings</a>
-        <a href="../seller/add-gem.php" style="margin-right:15px; text-decoration:none; color:#DB2777; font-weight:bold;">Add New Gem</a>
-        <a href="../public/logout.php" style="text-decoration:none; color:red; font-weight:bold;">Logout</a>
-    </div>
-</nav>
+<h2>Your Gem Listings</h2>
 
-<h2 style="font-size:18px; font-weight:bold; margin-bottom:12px;">Your Gem Listings</h2>
-
-<table style="width:100%; border-collapse:collapse; font-size:14px;">
+<table>
     <thead>
-        <tr style="background-color:#f3f3f3;">
-            <th style="border:1px solid #ccc; padding:8px;">Title</th>
-            <th style="border:1px solid #ccc; padding:8px;">Type</th>
-            <th style="border:1px solid #ccc; padding:8px;">Carat</th>
-            <th style="border:1px solid #ccc; padding:8px;">Price</th>
-            <th style="border:1px solid #ccc; padding:8px;">Status</th>
-            <th style="border:1px solid #ccc; padding:8px;">Actions</th>
+        <tr>
+            <th>Title</th>
+            <th>Type</th>
+            <th>Carat</th>
+            <th>Price</th>
+            <th>Status</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
         <?php while ($g = $gems->fetch_assoc()): ?>
             <?php
-            // Fetch gem images (use full path from DB)
+            // Fetch gem images
             $stmtImg = $conn->prepare("SELECT image_path FROM gem_images WHERE gem_id = ?");
             $stmtImg->bind_param("i", $g['id']);
             $stmtImg->execute();
@@ -72,40 +68,30 @@ $gems = $stmt->get_result();
                 $vdoArray[] = $v['video_path'];
             }
             $stmtVdo->close();
-
-            // Certificate path
-            $certPath = !empty($g['certificate']) ? $g['certificate'] : '';
             ?>
-            <tr style="border-bottom:1px solid #ccc; <?= $g['status'] === 'deactivated' ? 'opacity:0.5;' : '' ?>">
-                <td style="border:1px solid #ccc; padding:6px;"><?= htmlspecialchars($g['title']) ?></td>
-                <td style="border:1px solid #ccc; padding:6px;"><?= htmlspecialchars($g['type']) ?></td>
-                <td style="border:1px solid #ccc; padding:6px;"><?= htmlspecialchars($g['carat']) ?></td>
-                <td style="border:1px solid #ccc; padding:6px;">Rs <?= number_format($g['price'], 2) ?></td>
-                <td style="border:1px solid #ccc; padding:6px;">
+            <tr class="<?= $g['status'] === 'deactivated' ? 'deactivated' : '' ?>">
+                <td><?= htmlspecialchars($g['title']) ?></td>
+                <td><?= htmlspecialchars($g['type']) ?></td>
+                <td><?= htmlspecialchars($g['carat']) ?></td>
+                <td>Rs <?= number_format($g['price'], 2) ?></td>
+                <td>
                     <?php
-                    if ($g['status'] === 'approved') echo '<span style="color:green; font-weight:bold;">Approved</span>';
-                    elseif ($g['status'] === 'pending') echo '<span style="color:orange; font-weight:bold;">Pending</span>';
-                    elseif ($g['status'] === 'rejected') echo '<span style="color:red; font-weight:bold;">Rejected</span>';
-                    else echo '<span style="color:red; font-weight:bold;">Deactivated</span>';
+                    if ($g['status'] === 'approved') echo '<span class="status-approved">Approved</span>';
+                    elseif ($g['status'] === 'pending') echo '<span class="status-pending">Pending</span>';
+                    elseif ($g['status'] === 'rejected') echo '<span class="status-rejected">Rejected</span>';
+                    else echo '<span class="status-rejected">Deactivated</span>';
                     ?>
                 </td>
-                <td style="border:1px solid #ccc; padding:6px; text-align:center;">
+                <td>
                     <?php if ($g['status'] === 'deactivated'): ?>
-                        <span style="color:red; font-weight:bold;">Deactivated</span>
+                        <span class="status-rejected">Deactivated</span>
                     <?php else: ?>
                         <button class="view-btn"
-                            data-title="<?= htmlspecialchars($g['title']) ?>"
-                            data-type="<?= htmlspecialchars($g['type']) ?>"
-                            data-carat="<?= htmlspecialchars($g['carat']) ?>"
-                            data-color="<?= htmlspecialchars($g['color']) ?>"
-                            data-clarity="<?= htmlspecialchars($g['clarity']) ?>"
-                            data-origin="<?= htmlspecialchars($g['origin']) ?>"
-                            data-price="<?= number_format($g['price'], 2) ?>"
-                            data-negotiable="<?= $g['is_negotiable'] ?>"
-                            data-description="<?= htmlspecialchars($g['description']) ?>"
-                            data-certificate="<?= htmlspecialchars($certPath) ?>"
-                            data-images='<?= json_encode($imgArray) ?>'
-                            data-videos='<?= json_encode($vdoArray) ?>'>View</button>
+                            onclick="window.location.href='../seller/view-gem.php?id=<?= $g['id'] ?>'"
+                            style="padding:6px 12px; background:#F9A8D4; color:#DB2777; border:none; border-radius:4px; cursor:pointer;">
+                            View
+                        </button>
+
 
                         <button class="action-btn edit"
                             onclick="window.location.href='../seller/edit-gem.php?id=<?= $g['id'] ?>'">
@@ -120,14 +106,12 @@ $gems = $stmt->get_result();
     </tbody>
 </table>
 
-<div id="msg" style="margin-top:10px; font-weight:bold;"></div>
+<div id="msg"></div>
 
-<!-- Modal for gem details -->
+<!-- Gem Modal -->
 <div id="gemModal">
     <div class="modal-content">
         <span id="modalClose">&times;</span>
-
-        <!-- Column 1 -->
         <div class="modal-column">
             <label>Title</label>
             <input type="text" id="modalTitle" readonly>
@@ -141,14 +125,13 @@ $gems = $stmt->get_result();
             <label>Certificate</label>
             <div id="modalCertificate"></div>
 
-                        <label>Images</label>
+            <label>Images</label>
             <div class="modal-images" id="modalImages"></div>
 
             <label>Videos</label>
             <div class="modal-videos" id="modalVideos"></div>
         </div>
 
-        <!-- Column 2 -->
         <div class="modal-column">
             <label>Carat</label>
             <input type="text" id="modalCarat" readonly>
@@ -167,18 +150,17 @@ $gems = $stmt->get_result();
 
             <label>Description</label>
             <textarea id="modalDescription" rows="4" readonly></textarea>
-
-
         </div>
     </div>
 </div>
-
 
 <!-- Media Modal -->
 <div id="mediaModal" onclick="this.style.display='none'">
     <video id="modalVideo" controls style="display:none;"></video>
     <img id="modalImg">
 </div>
+
+
 
 
 <script>

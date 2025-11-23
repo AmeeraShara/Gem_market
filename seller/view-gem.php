@@ -1,5 +1,5 @@
 <?php
-if (session_status() === PHP_SESSION_NONE) session_start();
+session_start();
 
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'seller') {
     header("Location: ../public/login.php");
@@ -8,73 +8,120 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'seller') {
 
 include "../config/db.php";
 
-$gem_id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
-
-// Fetch gem
-$stmt = $conn->prepare("SELECT * FROM gems WHERE id = ? AND seller_id = ?");
-$stmt->bind_param("ii", $gem_id, $_SESSION['user_id']);
-$stmt->execute();
-$gem = $stmt->get_result()->fetch_assoc();
-
-if (!$gem) {
-    echo "Gem not found!";
-    exit;
+if (!isset($_GET['id'])) {
+    die("No gem ID provided.");
 }
 
-// Fetch gem images
+$gem_id = intval($_GET['id']);
+$seller_id = $_SESSION['user_id'];
+
+// Fetch gem details
+$stmt = $conn->prepare("SELECT * FROM gems WHERE id = ? AND seller_id = ?");
+$stmt->bind_param("ii", $gem_id, $seller_id);
+$stmt->execute();
+$gem = $stmt->get_result()->fetch_assoc();
+$stmt->close();
+
+if (!$gem) {
+    die("Gem not found or you do not have permission.");
+}
+
+// Fetch images
 $stmtImg = $conn->prepare("SELECT image_path FROM gem_images WHERE gem_id = ?");
 $stmtImg->bind_param("i", $gem_id);
 $stmtImg->execute();
 $images = $stmtImg->get_result();
+$imgArray = [];
+while ($img = $images->fetch_assoc()) $imgArray[] = $img['image_path'];
+$stmtImg->close();
 
-// Fetch gem videos
+// Fetch videos
 $stmtVdo = $conn->prepare("SELECT video_path FROM gem_videos WHERE gem_id = ?");
 $stmtVdo->bind_param("i", $gem_id);
 $stmtVdo->execute();
 $videos = $stmtVdo->get_result();
+$vdoArray = [];
+while ($v = $videos->fetch_assoc()) $vdoArray[] = $v['video_path'];
+$stmtVdo->close();
 ?>
 
-<h2><?= htmlspecialchars($gem['title']) ?></h2>
-<p><strong>Type:</strong> <?= htmlspecialchars($gem['type']) ?></p>
-<p><strong>Carat:</strong> <?= htmlspecialchars($gem['carat']) ?></p>
-<p><strong>Color:</strong> <?= htmlspecialchars($gem['color']) ?></p>
-<p><strong>Clarity:</strong> <?= htmlspecialchars($gem['clarity']) ?></p>
-<p><strong>Origin:</strong> <?= htmlspecialchars($gem['origin']) ?></p>
-<p><strong>Price:</strong> Rs <?= number_format($gem['price'],2) ?> <?= $gem['is_negotiable'] ? '(Negotiable)' : '' ?></p>
-<p><strong>Description:</strong> <?= nl2br(htmlspecialchars($gem['description'] ?? 'N/A')) ?></p>
+<link rel="stylesheet" href="../public/css/view-gem.css">
 
-<p><strong>Status:</strong> <?= ucfirst($gem['status']) ?></p>
+<div class="form-box" style="position: relative;">
 
-<!-- Certificate -->
-<p><strong>Certificate:</strong>
-<?php 
-if(!empty($gem['certificate'])) {
-    $certPath = "../uploads/certificates/" . basename($gem['certificate']);
-    $ext = strtolower(pathinfo($certPath, PATHINFO_EXTENSION));
-    if(in_array($ext, ['jpg','jpeg','png','gif'])) {
-        echo "<img src='$certPath' style='width:100px; height:100px; object-fit:cover; cursor:pointer;' onclick=\"window.open('$certPath','_blank')\">";
-    } else {
-        echo "<a href='$certPath' target='_blank'>View PDF</a>";
-    }
-} else echo "N/A";
-?>
-</p>
+    <button 
+        style="
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: transparent;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #555;
+        "
+        onclick="window.location.href='../public/seller-dashboard.php'"
+        title="Close"
+    >&times;</button>
+    
+    <div class="title"><?= htmlspecialchars($gem['title']) ?> Details</div>
 
-<!-- Images -->
-<p><strong>Images:</strong></p>
-<?php while($img = $images->fetch_assoc()): 
-    $imgPath = "../uploads/gems/" . basename($img['image_path']);
-?>
-    <img src="<?= $imgPath ?>" style="width:100px; height:100px; object-fit:cover; margin:5px; cursor:pointer;" 
-         onclick="window.open('<?= $imgPath ?>','_blank')">
-<?php endwhile; ?>
+    <div class="form-columns">
+        <div class="form-column">
+            <div class="form-row"><label>Type:</label><input type="text" value="<?= htmlspecialchars($gem['type']) ?>" readonly></div>
+            <div class="form-row"><label>Carat:</label><input type="text" value="<?= htmlspecialchars($gem['carat']) ?>" readonly></div>
+            <div class="form-row"><label>Color:</label><input type="text" value="<?= htmlspecialchars($gem['color']) ?>" readonly></div>
+            <div class="form-row"><label>Clarity:</label><input type="text" value="<?= htmlspecialchars($gem['clarity']) ?>" readonly></div>
+            <div class="form-row"><label>Origin:</label><input type="text" value="<?= htmlspecialchars($gem['origin']) ?>" readonly></div>
+        </div>
 
-<!-- Videos -->
-<?php if($videos->num_rows > 0): ?>
-    <p><strong>Videos:</strong></p>
-    <?php while($vdo = $videos->fetch_assoc()):
-        $vdoPath = "../uploads/gem_videos/" . basename($vdo['video_path']);
-    ?>
-        <video src="<?= $vdoPath ?>" controls style="width:200px; height:120px; object-fit:cover; margin:5px;"></video>
-    <?php endwhile; ?>
-<?php endif; ?>
+        <div class="form-column">
+            <div class="form-row"><label>Price:</label><input type="text" value="Rs <?= number_format($gem['price'], 2) ?> <?= $gem['is_negotiable'] ? '(Negotiable)' : '' ?>" readonly></div>
+            <div class="form-row"><label>Description:</label><textarea rows="4" readonly><?= htmlspecialchars($gem['description']) ?></textarea></div>
+<div class="form-row">
+    <label>Certificate:</label>
+    <?php if (!empty($gem['certificate'])): 
+        $certPath = $gem['certificate'];
+        $ext = strtolower(pathinfo($certPath, PATHINFO_EXTENSION));
+        // Convert server path to full URL
+        $certUrl = 'http://localhost:3000/' . ltrim(str_replace('../', '', $certPath), '/');
+
+        if (in_array($ext, ['jpg','jpeg','png','gif'])): ?>
+            <img src="<?= htmlspecialchars($certUrl) ?>" style="width:100px; cursor:pointer;" onclick="window.open('<?= htmlspecialchars($certUrl) ?>','_blank')">
+        <?php elseif ($ext === 'pdf'): ?>
+            <a href="<?= htmlspecialchars($certUrl) ?>" target="_blank">View Certificate PDF</a>
+        <?php else: ?>
+            N/A
+        <?php endif; ?>
+    <?php else: ?>
+        N/A
+    <?php endif; ?>
+</div>
+
+
+
+        </div>
+    </div>
+
+    <div class="form-row">
+        <label>Images:</label>
+        <div>
+            <?php foreach ($imgArray as $img): ?>
+                <img src="<?= htmlspecialchars($img) ?>" style="width:80px; cursor:pointer; margin:5px;" onclick="window.open('<?= htmlspecialchars($img) ?>','_blank')">
+            <?php endforeach; ?>
+        </div>
+    </div>
+
+    <div class="form-row">
+        <label>Videos:</label>
+        <div>
+            <?php foreach ($vdoArray as $vdo): ?>
+                <video src="<?= htmlspecialchars($vdo) ?>" controls style="width:200px; display:block; margin-bottom:10px;"></video>
+            <?php endforeach; ?>
+        </div>
+    </div>
+
+    <div class="button-row">
+        <button class="back-btn" onclick="window.location.href='gem-listings.php'">Back to Dashboard</button>
+    </div>
+</div>

@@ -186,6 +186,7 @@ if (isset($_GET['msg'])) $msg = $_GET['msg'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -193,156 +194,183 @@ if (isset($_GET['msg'])) $msg = $_GET['msg'];
     <link rel="stylesheet" href="/public/css/edit-gem.css">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.3/dist/tailwind.min.css" rel="stylesheet">
 </head>
+
 <body class="bg-gray-50 p-6">
 
-<main class="form-box">
-    <h1 class="text-3xl font-bold mb-6 text-center text-pink-600">Edit Gem</h1>
+    <main class="form-box" style="position: relative;">
+<button 
+        style="
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: transparent;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #555;
+        "
+        onclick="window.location.href='../public/seller-dashboard.php'"
+        title="Close"
+    >&times;</button>
+        <h1 class="text-3xl font-bold mb-6 text-center text-pink-600">Edit Gem</h1>
 
-    <?php if ($msg): ?>
-        <div class="message-success"><?= htmlspecialchars($msg) ?></div>
-    <?php endif; ?>
+        <?php if ($msg): ?>
+            <div class="message-success"><?= htmlspecialchars($msg) ?></div>
+        <?php endif; ?>
 
-    <form method="POST" enctype="multipart/form-data">
-        <section class="form-columns">
+        <form method="POST" enctype="multipart/form-data">
+            <section class="form-columns">
 
-            <div class="form-column">
-                <div class="form-row">
-                    <label>Gem Title</label>
-                    <input name="title" type="text" value="<?= htmlspecialchars($gem['title']) ?>" required />
-                </div>
-
-                <div class="form-row">
-                    <label>Type</label>
-                    <input name="type" type="text" value="<?= htmlspecialchars($gem['type']) ?>" required />
-                </div>
-
-                <div class="form-row">
-                    <label>Carat</label>
-                    <input name="carat" type="number" step="0.01" value="<?= htmlspecialchars($gem['carat']) ?>" required />
-                </div>
-
-                <div class="form-row mt-6">
-                    <label>Price</label>
-                    <input name="price" type="number" step="0.01" value="<?= htmlspecialchars($gem['price']) ?>" required />
-                </div>
-
-                <!-- DESCRIPTION FIELD -->
-                <div class="form-row">
-                    <label>Description</label>
-                    <textarea name="description" rows="4" required><?= htmlspecialchars($gem['description']) ?></textarea>
-                </div>
-            </div>
-
-            <div class="form-column">
-                <div class="form-row">
-                    <label>Color</label>
-                    <input name="color" type="text" value="<?= htmlspecialchars($gem['color']) ?>" required />
-                </div>
-
-                <div class="form-row">
-                    <label>Clarity</label>
-                    <input name="clarity" type="text" value="<?= htmlspecialchars($gem['clarity']) ?>" required />
-                </div>
-
-                <div class="form-row">
-                    <label>Origin</label>
-                    <input name="origin" type="text" value="<?= htmlspecialchars($gem['origin']) ?>" required />
-                </div>
-
-                <div class="checkbox-row">
-                    <input name="is_negotiable" type="checkbox" <?= $gem['is_negotiable'] ? 'checked' : '' ?> />
-                    <label>Negotiable</label>
-                </div>
-
-                <div class="form-row">
-                    <label>Add New Images</label>
-                    <input name="images[]" type="file" multiple accept="image/*" />
-                </div>
-
-                <div class="form-row">
-                    <label>Add New Videos</label>
-                    <input name="videos[]" type="file" multiple accept="video/*" />
-                </div>
-
-            </div>
-        </section>
-
-        <!-- Existing Images -->
-        <fieldset>
-            <legend class="text-lg font-semibold mb-3">Existing Images</legend>
-            <div class="images-grid">
-                <?php foreach ($images as $img): ?>
-                    <div class="image-wrapper">
-                        <img src="<?= htmlspecialchars($img['image_path']) ?>" alt="Gem image" onclick="openLightbox('<?= htmlspecialchars($img['image_path']) ?>')" />
-                        <label>
-                            <input type="checkbox" name="remove_images[]" value="<?= htmlspecialchars($img['id']) ?>" /> Remove
-                        </label>
+                <div class="form-column">
+                    <div class="form-row">
+                        <label>Gem Title</label>
+                        <input name="title" type="text" value="<?= htmlspecialchars($gem['title']) ?>" required />
                     </div>
-                <?php endforeach; ?>
-            </div>
-        </fieldset>
 
-        <!-- Existing Videos -->
-        <fieldset class="mt-6">
-            <legend class="text-lg font-semibold mb-3">Existing Videos</legend>
-            <div class="videos-grid">
-                <?php foreach ($videos as $vdo): ?>
-                    <div class="video-wrapper">
-                        <video width="200" controls>
-                            <source src="<?= htmlspecialchars($vdo['video_path']) ?>" type="video/mp4">
-                            Your browser does not support the video tag.
-                        </video>
-                        <label>
-                            <input type="checkbox" name="remove_videos[]" value="<?= htmlspecialchars($vdo['id']) ?>" /> Remove
-                        </label>
+                    <div class="form-row">
+                        <label>Type</label>
+                        <input name="type" type="text" value="<?= htmlspecialchars($gem['type']) ?>" required />
                     </div>
-                <?php endforeach; ?>
-            </div>
-        </fieldset>
 
-        <!-- Certificate -->
-        <fieldset class="mt-6">
-            <legend class="text-lg font-semibold mb-3">Certificate</legend>
-            <?php if (!empty($gem['certificate'])):
-                $ext = strtolower(pathinfo($gem['certificate'], PATHINFO_EXTENSION));
-                if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif'])): ?>
-                    <div class="certificate-preview">
-                        <img src="<?= htmlspecialchars($gem['certificate']) ?>" alt="Certificate Image Preview" />
+                    <div class="form-row mt-6">
+                        <label>Price</label>
+                        <input name="price" type="number" step="0.01" value="<?= htmlspecialchars($gem['price']) ?>" required />
                     </div>
-                <?php else: ?>
-                    <p><a href="<?= htmlspecialchars($gem['certificate']) ?>" target="_blank">View Certificate PDF</a></p>
-            <?php endif; endif; ?>
 
-            <div class="form-row mt-3">
-                <label>Upload New Certificate</label>
-                <input name="certificate" type="file" accept="image/*,application/pdf" />
+                    <div class="form-row">
+                        <label>Add New Images</label>
+                        <input name="images[]" type="file" multiple accept="image/*" />
+                    </div>
+
+
+                </div>
+
+                <div class="form-column">
+                    <div class="form-row">
+                        <label>Color</label>
+                        <input name="color" type="text" value="<?= htmlspecialchars($gem['color']) ?>" required />
+                    </div>
+
+                    <div class="form-row">
+                        <label>Origin</label>
+                        <input name="origin" type="text" value="<?= htmlspecialchars($gem['origin']) ?>" required />
+                    </div>
+                    <div class="form-row">
+                        <label>Description</label>
+                        <textarea name="description" rows="4" required><?= htmlspecialchars($gem['description']) ?></textarea>
+                    </div>
+
+
+                </div>
+
+                <div class="form-column">
+
+                    <div class="form-row">
+                        <label>Carat</label>
+                        <input name="carat" type="number" step="0.01" value="<?= htmlspecialchars($gem['carat']) ?>" required />
+                    </div>
+
+                    <div class="form-row">
+                        <label>Clarity</label>
+                        <input name="clarity" type="text" value="<?= htmlspecialchars($gem['clarity']) ?>" required />
+                    </div>
+
+                    <div class="checkbox-row">
+                        <input name="is_negotiable" type="checkbox" <?= $gem['is_negotiable'] ? 'checked' : '' ?> />
+                        <label>Negotiable</label>
+                    </div>
+
+
+                    <div class="form-row">
+                        <label>Add New Videos</label>
+                        <input name="videos[]" type="file" multiple accept="video/*" />
+                    </div>
+
+
+
+                </div>
+
+
+            </section>
+
+            <!-- Existing Images -->
+            <fieldset>
+                <legend class="text-lg font-semibold mb-3">Existing Images</legend>
+                <div class="images-grid">
+                    <?php foreach ($images as $img): ?>
+                        <div class="image-wrapper">
+                            <img src="<?= htmlspecialchars($img['image_path']) ?>" alt="Gem image" onclick="openLightbox('<?= htmlspecialchars($img['image_path']) ?>')" />
+                            <label>
+                                <input type="checkbox" name="remove_images[]" value="<?= htmlspecialchars($img['id']) ?>" /> Remove
+                            </label>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </fieldset>
+
+            <!-- Existing Videos -->
+            <fieldset class="mt-6">
+                <legend class="text-lg font-semibold mb-3">Existing Videos</legend>
+                <div class="videos-grid">
+                    <?php foreach ($videos as $vdo): ?>
+                        <div class="video-wrapper">
+                            <video width="200" controls>
+                                <source src="<?= htmlspecialchars($vdo['video_path']) ?>" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                            <label>
+                                <input type="checkbox" name="remove_videos[]" value="<?= htmlspecialchars($vdo['id']) ?>" /> Remove
+                            </label>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </fieldset>
+
+            <!-- Certificate -->
+            <fieldset class="mt-6">
+                <legend class="text-lg font-semibold mb-3">Certificate</legend>
+                <?php if (!empty($gem['certificate'])):
+                    $ext = strtolower(pathinfo($gem['certificate'], PATHINFO_EXTENSION));
+                    if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif'])): ?>
+                        <div class="certificate-preview">
+                            <img src="<?= htmlspecialchars($gem['certificate']) ?>" alt="Certificate Image Preview" />
+                        </div>
+                    <?php else: ?>
+                        <p><a href="<?= htmlspecialchars($gem['certificate']) ?>" target="_blank">View Certificate PDF</a></p>
+                <?php endif;
+                endif; ?>
+
+                <div class="form-row mt-3">
+                    <label>Upload New Certificate</label>
+                    <input name="certificate" type="file" accept="image/*,application/pdf" />
+                </div>
+            </fieldset>
+
+            <div class="button-row mt-6">
+                <button type="button" class="back-btn" onclick="window.location.href='../public/seller-dashboard.php'">Back</button>
+                <button type="submit" class="submit-btn">Save Changes</button>
             </div>
-        </fieldset>
+        </form>
+    </main>
 
-        <div class="button-row mt-6">
-            <button type="button" class="back-btn" onclick="window.location.href='../public/seller-dashboard.php'">Back</button>
-            <button type="submit" class="submit-btn">Save Changes</button>
-        </div>
-    </form>
-</main>
+    <!-- Lightbox for images -->
+    <div id="lightboxModal" class="lightbox" style="display:none;" onclick="closeLightbox()">
+        <button class="close-btn" onclick="closeLightbox(event)">&times;</button>
+        <img id="lightboxImg" class="lightbox-img" />
+    </div>
 
-<!-- Lightbox for images -->
-<div id="lightboxModal" class="lightbox" style="display:none;" onclick="closeLightbox()">
-    <button class="close-btn" onclick="closeLightbox(event)">&times;</button>
-    <img id="lightboxImg" class="lightbox-img" />
-</div>
+    <script>
+        function openLightbox(src) {
+            document.getElementById('lightboxImg').src = src;
+            document.getElementById('lightboxModal').style.display = 'flex';
+        }
 
-<script>
-    function openLightbox(src) {
-        document.getElementById('lightboxImg').src = src;
-        document.getElementById('lightboxModal').style.display = 'flex';
-    }
-
-    function closeLightbox(event) {
-        if (event) event.stopPropagation();
-        document.getElementById('lightboxModal').style.display = 'none';
-    }
-</script>
+        function closeLightbox(event) {
+            if (event) event.stopPropagation();
+            document.getElementById('lightboxModal').style.display = 'none';
+        }
+    </script>
 
 </body>
+
 </html>
