@@ -106,9 +106,12 @@ include __DIR__ . '/header.php';
 <html>
 <head>
     <title>Browse Gems</title>
-    <link rel="stylesheet" href="css/index.css">
-    <link rel="stylesheet" href="css/wishlist.css">
+<link rel="stylesheet" href="css/browse.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+
 </head>
 <body>
 
@@ -116,27 +119,33 @@ include __DIR__ . '/header.php';
     <div class="container">
         <h2>Browse Gems</h2>
 
-        <!-- FILTER BAR -->
+        <!-- FILTER BAR – same as index.css structure -->
         <form id="filterForm" method="GET">
-            <div class="filter-container" style="margin: 20px 0; display: flex; gap: 10px; flex-wrap: wrap;">
+            <div class="filter-container">
                 <select name="type">
                     <option value="">All Types</option>
                     <?php foreach($types as $t): ?>
-                        <option value="<?= htmlspecialchars($t) ?>" <?= (($_GET['type'] ?? '') == $t) ? 'selected' : '' ?>><?= htmlspecialchars($t) ?></option>
+                        <option value="<?= htmlspecialchars($t) ?>" <?= (($_GET['type'] ?? '') == $t) ? 'selected' : '' ?>>
+                            <?= htmlspecialchars($t) ?>
+                        </option>
                     <?php endforeach; ?>
                 </select>
 
                 <select name="carat">
                     <option value="">Any Carat</option>
                     <?php foreach($carats as $c): ?>
-                        <option value="<?= htmlspecialchars($c) ?>" <?= (($_GET['carat'] ?? '') == $c) ? 'selected' : '' ?>><?= htmlspecialchars($c) ?> Carat</option>
+                        <option value="<?= htmlspecialchars($c) ?>" <?= (($_GET['carat'] ?? '') == $c) ? 'selected' : '' ?>>
+                            <?= htmlspecialchars($c) ?> Carat
+                        </option>
                     <?php endforeach; ?>
                 </select>
 
                 <select name="color">
                     <option value="">Any Color</option>
                     <?php foreach($colors as $c): ?>
-                        <option value="<?= htmlspecialchars($c) ?>" <?= (($_GET['color'] ?? '') == $c) ? 'selected' : '' ?>><?= htmlspecialchars($c) ?></option>
+                        <option value="<?= htmlspecialchars($c) ?>" <?= (($_GET['color'] ?? '') == $c) ? 'selected' : '' ?>>
+                            <?= htmlspecialchars($c) ?>
+                        </option>
                     <?php endforeach; ?>
                 </select>
 
@@ -150,8 +159,8 @@ include __DIR__ . '/header.php';
             </div>
         </form>
 
-        <!-- GEM GRID -->
-        <div class="latest-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px;">
+        <!-- GEM GRID – same classes as index page -->
+        <div class="latest-grid">
             <?php foreach ($gems as $gem):
                 $imgPath = $imagesByGem[$gem['id']] ?? "https://via.placeholder.com/400x500?text=No+Image";
                 $hasCert = !empty($gem['certificate']);
@@ -164,23 +173,28 @@ include __DIR__ . '/header.php';
                         <button
                             class="wishlist-btn <?= $inWishlist ? 'active' : '' ?>"
                             data-gem-id="<?= $gem['id'] ?>"
-                            aria-label="Add to wishlist"
-                            title="<?= $inWishlist ? 'Remove from wishlist' : 'Add to wishlist' ?>"
-                        >
+                            title="<?= $inWishlist ? 'Remove from wishlist' : 'Add to wishlist' ?>">
                             <i class="fa fa-heart"></i>
                         </button>
-                        <a href="gem_detail.php?id=<?= $gem['id'] ?>" aria-label="View details" title="View details">
+                        <a href="gem_detail.php?id=<?= $gem['id'] ?>" title="View details">
                             <i class="fa fa-eye"></i>
                         </a>
                     </div>
                 </div>
+
                 <div class="card-content">
                     <h3><?= htmlspecialchars($gem['title']) ?></h3>
+
                     <p class="card-meta">
-                        <?= htmlspecialchars($gem['carat']) ?> Carat &bull; <?= htmlspecialchars($gem['color']) ?> &bull;
+                        <?= htmlspecialchars($gem['carat']) ?> Carat • <?= htmlspecialchars($gem['color']) ?> •
                         <?= $hasCert ? '<span class="certified">Certified</span>' : '<span class="uncertified">Uncertified</span>' ?>
                     </p>
-                    <p class="price">Rs <?= number_format($gem['price'], 2) ?> <?= $gem['is_negotiable'] ? '(Negotiable)' : '' ?></p>
+
+                    <p class="price">
+                        Rs <?= number_format($gem['price'], 2) ?>
+                        <?= $gem['is_negotiable'] ? '(Negotiable)' : '' ?>
+                    </p>
+
                     <p class="seller">Seller: <?= htmlspecialchars($gem['seller_name']) ?></p>
                 </div>
             </div>
@@ -188,21 +202,24 @@ include __DIR__ . '/header.php';
         </div>
 
         <!-- PAGINATION -->
-        <div class="pagination" style="text-align:center; margin:30px 0;">
+        <div class="pagination">
             <?php if ($page > 1): ?>
-                <a class="btn-primary" href="?<?= http_build_query(array_merge($_GET, ['page' => $page - 1])) ?>">&laquo; Prev</a>
+                <a href="?<?= http_build_query(array_merge($_GET, ['page' => $page - 1])) ?>">&laquo; Prev</a>
             <?php endif; ?>
 
             <?php for ($i = 1; $i <= $totalPages; $i++): ?>
-                <a class="btn-primary <?= ($i == $page) ? 'active' : '' ?>" href="?<?= http_build_query(array_merge($_GET, ['page' => $i])) ?>"><?= $i ?></a>
+                <a class="<?= $i == $page ? 'active' : '' ?>" href="?<?= http_build_query(array_merge($_GET, ['page' => $i])) ?>">
+                    <?= $i ?>
+                </a>
             <?php endfor; ?>
 
             <?php if ($page < $totalPages): ?>
-                <a class="btn-primary" href="?<?= http_build_query(array_merge($_GET, ['page' => $page + 1])) ?>">Next &raquo;</a>
+                <a href="?<?= http_build_query(array_merge($_GET, ['page' => $page + 1])) ?>">Next &raquo;</a>
             <?php endif; ?>
         </div>
     </div>
 </section>
+
 
 <?php include __DIR__ . '/footer.php'; ?>
 

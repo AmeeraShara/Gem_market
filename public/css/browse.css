@@ -1,0 +1,181 @@
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: auto;
+}
+
+.latest-section {
+    padding: 40px 0;
+}
+
+.latest-section h2 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+
+
+.filter-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 25px;
+}
+
+.filter-container select,
+.filter-container input {
+    padding: 10px 14px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 15px;
+    background: #fff;
+    cursor: pointer;
+}
+
+.filter-container input {
+    width: 200px;
+}
+
+
+
+
+.latest-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+
+.card {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 12px rgba(0,0,0,0.08);
+    overflow: hidden;
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+}
+
+.card-image {
+    position: relative;
+    height: 280px;
+    overflow: hidden;
+}
+
+.card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.card-overlay {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.card-overlay button,
+.card-overlay a {
+    width: 36px;
+    height: 36px;
+    background: rgba(255,255,255,0.9);
+    border-radius: 50%;
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.card-overlay button:hover,
+.card-overlay a:hover {
+    background: #ffe3f3;
+}
+
+.wishlist-btn.active i {
+    color: #d20f65;
+}
+
+.card-content {
+    padding: 15px;
+}
+
+.card-content h3 {
+    font-size: 20px;
+    margin-bottom: 6px;
+}
+
+.card-meta {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 6px;
+}
+
+.certified {
+    color: green;
+    font-weight: bold;
+}
+
+.uncertified {
+    color: #b60000;
+}
+
+.price {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.seller {
+    font-size: 14px;
+    color: #666;
+}
+
+
+
+
+.pagination {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.pagination a {
+    display: inline-block;
+    padding: 10px 18px;
+    background: #f7f7f7;
+    color: #333;
+    font-weight: bold;
+    border-radius: 6px;
+    margin: 0 5px;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.pagination a:hover {
+    background: #ffe3f2;
+}
+
+.pagination .active {
+    background: #db2777;
+    color: #fff;
+}
+
+
+
+
+@media (max-width: 768px) {
+    .card-image {
+        height: 230px;
+    }
+
+    .filter-container select,
+    .filter-container input {
+        width: 100%;
+    }
+}

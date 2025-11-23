@@ -1,7 +1,7 @@
 <?php
 include __DIR__ . '/../../config/db.php'; // adjust path if needed
 session_start();
-
+include 'admin_header.php';
 // Only allow admin access
 if($_SESSION['role'] != 'admin'){
     header("Location: ../login.php");
