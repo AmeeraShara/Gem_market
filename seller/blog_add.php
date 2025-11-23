@@ -1,8 +1,8 @@
 <?php
 session_start();
-require __DIR__ . '/../includes/db.php';
+include "../config/db.php";
 if(!isset($_SESSION['user_id']) || $_SESSION['role'] != 'seller'){
-    header("Location: ../login.php");
+  header("Location: ../public/login.php");
     exit;
 }
 
