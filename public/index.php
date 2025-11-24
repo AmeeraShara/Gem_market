@@ -36,6 +36,33 @@ if (isset($_SESSION['user_id'])) {
         $wishlistGemIds[] = $row['gem_id'];
     }
 }
+// Fetch latest blogs
+$sqlLatestBlogs = "
+    SELECT b.*, u.full_name AS author_name
+    FROM blogs b
+    JOIN users u ON b.user_id = u.id
+    WHERE b.status='approved'
+    ORDER BY b.created_at DESC
+    LIMIT 4
+";
+$resBlogs = mysqli_query($conn, $sqlLatestBlogs);
+
+$blogIds = [];
+$latestBlogs = [];
+while ($blog = mysqli_fetch_assoc($resBlogs)) {
+    $latestBlogs[] = $blog;
+    $blogIds[] = $blog['id'];
+}
+
+// Get first image for each blog (optional)
+$blogImages = [];
+if (!empty($blogIds)) {
+    $ids = implode(',', array_map('intval', $blogIds));
+    $imgRes = $conn->query("SELECT blog_id, image_path FROM blog_images WHERE blog_id IN ($ids) GROUP BY blog_id");
+    while ($img = $imgRes->fetch_assoc()) {
+        $blogImages[$img['blog_id']] = $img['image_path'];
+    }
+}
 
 // Fetch filter values from DB
 $typeRes = $conn->query("SELECT DISTINCT type FROM gems WHERE type IS NOT NULL AND type != ''");
@@ -169,6 +196,33 @@ sort($carats);
           </p>
           <p class="price">Rs <?= number_format($gem['price'], 2) ?> <?= $gem['is_negotiable'] ? '(Negotiable)' : '' ?></p>
           <p class="seller">Seller: <?= htmlspecialchars($gem['seller_name']) ?></p>
+        </div>
+      </div>
+      <?php endforeach; ?>
+    </div>
+  </div>
+</section>
+<section class="latest-section">
+  <div class="container">
+    <h2>Latest Blogs</h2>
+    <div class="latest-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px;">
+      <?php foreach ($latestBlogs as $blog):
+            $imgPath = $blogImages[$blog['id']] ?? "https://via.placeholder.com/400x300?text=No+Image";
+      ?>
+      <div class="card">
+        <div class="card-image">
+          <img src="<?= htmlspecialchars($imgPath) ?>" alt="<?= htmlspecialchars($blog['title']) ?>" />
+          <div class="card-overlay">
+            <a href="blog_detail.php?id=<?= $blog['id'] ?>" aria-label="View blog" title="View blog">
+              <i class="fa fa-eye"></i>
+            </a>
+          </div>
+        </div>
+        <div class="card-content">
+          <h3><?= htmlspecialchars($blog['title']) ?></h3>
+          <p class="card-meta">By <?= htmlspecialchars($blog['author_name']) ?></p>
+          <p class="excerpt"><?= htmlspecialchars(substr($blog['content'], 0, 100)) ?>...</p>
+          <a href="blog_detail.php?id=<?= $blog['id'] ?>" class="btn-primary" style="margin-top:5px;">Read More</a>
         </div>
       </div>
       <?php endforeach; ?>

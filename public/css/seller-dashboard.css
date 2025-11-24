@@ -1,0 +1,100 @@
+/* GENERAL BODY */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background: #FCE7F3;
+    color: #111;
+}
+
+/* CONTAINER */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 16px;
+    text-align: center;
+}
+
+/* DASHBOARD HERO SECTION */
+.dashboard-hero {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 80px 16px;
+    background: linear-gradient(135deg, #F9A8D4 0%, #EC4899 100%);
+    color: #fff;
+    border-radius: 12px;
+    margin: 32px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+}
+
+.dashboard-hero h1 {
+    font-size: 36px;
+    margin-bottom: 16px;
+}
+
+.dashboard-hero p {
+    font-size: 18px;
+    margin-bottom: 24px;
+}
+
+/* BUTTONS */
+.btn-primary {
+    background-color: #fff;
+    color: #DB2777;
+    padding: 12px 28px;
+    border-radius: 9999px;
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-block;
+    margin: 8px;
+    transition: 0.3s;
+}
+
+.btn-primary i {
+    margin-right: 8px;
+}
+
+.btn-primary:hover {
+    background-color: #F9A8D4;
+    color: #fff;
+}
+
+/* RESPONSIVE */
+@media (max-width: 1024px) {
+    .dashboard-hero {
+        padding: 60px 16px;
+        margin: 24px;
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard-hero h1 {
+        font-size: 28px;
+    }
+
+    .dashboard-hero p {
+        font-size: 16px;
+    }
+
+    .btn-primary {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 450px) {
+    .dashboard-hero h1 {
+        font-size: 24px;
+    }
+
+    .dashboard-hero p {
+        font-size: 14px;
+    }
+
+    .btn-primary {
+        padding: 8px 16px;
+        font-size: 12px;
+    }
+}

@@ -23,7 +23,7 @@ if (session_status() === PHP_SESSION_NONE) {
             <ul class="navbar-nav ms-auto gap-lg-3">
 
                 <li class="nav-item"><a class="nav-link" href="index.php">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="blog.php">Blog</a></li>
+                <li class="nav-item"><a class="nav-link" href="browse_blog.php">Blog</a></li>
                 <li class="nav-item"><a class="nav-link" href="browse_gems.php">Browse Gems</a></li>
 
                 <?php if (isset($_SESSION['user_id'])): ?>
