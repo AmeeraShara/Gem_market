@@ -33,11 +33,7 @@ include "../seller/seller_header.php";
 <body>
 
 <div class="form-box">
-    <button 
-        class="close-btn"
-        onclick="window.location.href='../public/seller-dashboard.php'"
-        title="Close"
-    >&times;</button>
+
 
     <h1 class="title">Your Gem Listings</h1>
 

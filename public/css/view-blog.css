@@ -149,3 +149,15 @@ textarea { resize: none; }
         border: 1.5px solid #F9A8D4;
     }
 }
+@media (max-width: 600px) {
+    .form-box {
+        padding: 0 !important;
+        margin: 0 !important;
+        border: none !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        background: transparent !important;
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+}
