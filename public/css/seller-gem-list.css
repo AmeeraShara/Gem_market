@@ -1,0 +1,187 @@
+/* ================================
+    GLOBAL PAGE STYLE
+================================== */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background: #FCE7F3;
+}
+
+/* Page Heading */
+h2 {
+    text-align: center;
+    margin: 20px 0;
+    color: #DB2777;
+    font-size: 26px;
+    font-weight: bold;
+}
+
+/* ================================
+    TABLE STYLING
+================================== */
+table {
+    width: 95%;
+    max-width: 1100px;
+    margin: auto;
+    border-collapse: collapse;
+    background: #FDF2F8;
+    border: 2px solid #F9A8D4;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 22px rgba(0,0,0,0.10);
+}
+
+thead tr {
+    background: #F9A8D4;
+    color: #DB2777;
+    font-weight: bold;
+}
+
+thead th {
+    padding: 14px;
+    font-size: 16px;
+    border-bottom: 2px solid #FBCFE8;
+}
+
+tbody td {
+    padding: 12px;
+    border-bottom: 1px solid #F3D1E7;
+    font-size: 15px;
+}
+
+/* Deactivated Row */
+tr.deactivated {
+    opacity: 0.5;
+    background: #F3F4F6;
+    pointer-events: none;
+}
+
+/* Hover Effect */
+tbody tr:hover {
+    background: #FCE7F3;
+    transition: 0.2s ease-in-out;
+}
+
+/* ================================
+    STATUS BADGES
+================================== */
+.status-approved {
+    color: #065F46;
+    background: #D1FAE5;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.status-pending {
+    color: #92400E;
+    background: #FEF3C7;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+.status-rejected {
+    color: #991B1B;
+    background: #FECACA;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+/* ================================
+    ACTION BUTTONS
+================================== */
+.view-btn,
+.action-btn {
+    padding: 7px 14px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    margin-right: 5px;
+    transition: 0.2s;
+}
+
+/* View Button (Pink) */
+.view-btn {
+    background: #F9A8D4;
+    color: #DB2777;
+    font-weight: bold;
+}
+
+.view-btn:hover {
+    background: #FBCFE8;
+}
+
+/* Edit Button */
+.action-btn.edit {
+    background: #60A5FA;
+    color: white;
+}
+
+.action-btn.edit:hover {
+    background: #3B82F6;
+}
+
+/* Delete Button */
+.action-btn.delete {
+    background: #F87171;
+    color: white;
+}
+
+.action-btn.delete:hover {
+    background: #EF4444;
+}
+
+/* ================================
+    RESPONSIVE DESIGN
+================================== */
+@media (max-width: 900px) {
+    table {
+        width: 98%;
+    }
+
+    thead {
+        display: none; /* hides header on small screens */
+    }
+
+    tbody tr {
+        display: block;
+        margin-bottom: 12px;
+        border: 2px solid #F9A8D4;
+        padding: 12px;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    }
+
+    tbody td {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 4px;
+        border: none;
+    }
+
+    tbody td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        color: #DB2777;
+    }
+}
+
+@media (max-width: 480px) {
+    h2 {
+        font-size: 22px;
+    }
+
+    .view-btn,
+    .action-btn {
+        width: 100%;
+        margin: 5px 0;
+    }
+
+    tbody tr {
+        padding: 15px;
+    }
+}

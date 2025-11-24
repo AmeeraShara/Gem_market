@@ -28,7 +28,7 @@ if (session_status() === PHP_SESSION_NONE) {
                     <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Gems</a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="../seller/add-gem.php">Add New Gem</a></li>
-                        <li><a class="dropdown-item" href="../seller/manage_gems.php">Manage Gems</a></li>
+                        <li><a class="dropdown-item" href="../seller/manage-gems.php">Manage Gems</a></li>
                     </ul>
                 </li>
 
