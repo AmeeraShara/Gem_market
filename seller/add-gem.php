@@ -96,6 +96,9 @@ if (isset($_POST['submit'])) {
     $msg = "Listing added! Await admin approval.";
   }
 }
+
+ include "../seller/seller_header.php"; 
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -141,7 +144,6 @@ if (isset($_POST['submit'])) {
             </select>
           </div>
 
-
           <div class="form-row">
             <label>Carat</label>
             <input type="number" step="0.01" name="carat" required>
@@ -163,7 +165,6 @@ if (isset($_POST['submit'])) {
             </select>
           </div>
 
-
         </div>
 
         <div class="form-column">
@@ -181,7 +182,6 @@ if (isset($_POST['submit'])) {
             </select>
           </div>
 
-
           <div class="form-row">
             <label>Origin</label>
             <select name="origin" required>
@@ -194,7 +194,6 @@ if (isset($_POST['submit'])) {
               <option value="other">Other</option>
             </select>
           </div>
-
 
           <div class="form-row">
             <label>Price</label>

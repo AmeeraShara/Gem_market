@@ -1,17 +1,27 @@
-/* GENERAL BODY */
 body {
     margin: 0;
     padding: 0;
-    font-family: 'Arial', sans-serif;
+    font-family: Arial, sans-serif;
     background: #FCE7F3;
-    color: #111;
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column;
     min-height: 100vh;
 }
+/* HEADER */
+header {
+    width: 100%;
+    background-color: #EC4899;
+    color: white;
+    padding: 15px 30px;
+    font-size: 20px;
+    font-weight: bold;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    position: relative;
+    z-index: 10;
+    text-align: center;
+}
 
-/* FORM CONTAINER */
+/* FORM BOX */
 .form-box {
     width: 100%;
     max-width: 900px;
@@ -23,6 +33,25 @@ body {
     display: flex;
     flex-direction: column;
     gap: 20px;
+    margin: 20px auto; /* center below header */
+}
+
+/* TITLE */
+.title {
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+    color: #DB2777;
+}
+
+/* SUCCESS ALERT */
+.alert-success {
+    background: #D1FAE5;
+    color: #065F46;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #34D399;
+    text-align: center;
 }
 
 /* FORM COLUMNS */
@@ -50,6 +79,7 @@ body {
 
 .form-row label {
     font-weight: 600;
+    color: #DB2777;
 }
 
 .form-row input[type="text"],
@@ -73,7 +103,24 @@ body {
     box-shadow: 0 0 5px #F9A8D4;
 }
 
-/* CHECKBOX */
+/* CUSTOM SELECT */
+.form-row select {
+    background-color: #FFF0F6;
+    color: #DB2777;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' fill='%23DB2777'%3E%3Cpolygon points='0,0 20,0 10,10'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 12px;
+}
+
+.form-row select:hover {
+    background-color: #FEE2EC;
+}
+
+/* CHECKBOX ROW */
 .checkbox-row {
     display: flex;
     align-items: center;
@@ -85,7 +132,6 @@ body {
     display: flex;
     justify-content: space-between;
     gap: 20px;
-    margin-top: 20px;
 }
 
 .button-row button {
@@ -98,21 +144,21 @@ body {
     transition: 0.3s;
 }
 
-.button-row .back-btn {
+.back-btn {
     background: #E5E7EB;
     color: #111827;
 }
 
-.button-row .back-btn:hover {
+.back-btn:hover {
     background: #D1D5DB;
 }
 
-.button-row .submit-btn {
+.submit-btn {
     background: #EC4899;
-    color: #fff;
+    color: white;
 }
 
-.button-row .submit-btn:hover {
+.submit-btn:hover {
     background: #DB2777;
 }
 
@@ -201,32 +247,23 @@ body {
     .form-columns {
         flex-direction: column;
     }
-
     .images-grid {
         grid-template-columns: repeat(2, 1fr);
     }
 }
 
 @media (max-width: 600px) {
-    /* STACK FORM ROWS VERTICALLY */
     .form-row {
         grid-template-columns: 1fr !important;
     }
-
     .form-row label {
         margin-bottom: 6px;
     }
-
     .form-row input,
     .form-row textarea,
     .form-row select {
         width: 100%;
     }
-
-    .form-columns {
-        flex-direction: column;
-    }
-
     .image-wrapper img,
     .certificate-preview img {
         height: 120px;
@@ -236,5 +273,11 @@ body {
 @media (max-width: 400px) {
     .form-box {
         padding: 25px 15px;
+    }
+    .form-row textarea {
+        padding: 12px;
+        font-size: 16px;
+        border-radius: 12px;
+        border: 1.5px solid #F9A8D4;
     }
 }

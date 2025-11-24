@@ -5,7 +5,6 @@ if (session_status() === PHP_SESSION_NONE) {
 ?>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<link rel="stylesheet" href="css/header.css">
 
 <nav class="navbar navbar-expand-lg bg-white shadow-sm sticky-top">
     <div class="container">
@@ -22,7 +21,7 @@ if (session_status() === PHP_SESSION_NONE) {
         <div class="collapse navbar-collapse" id="mainNav">
             <ul class="navbar-nav ms-auto gap-lg-3">
 
-                <li class="nav-item"><a class="nav-link" href="seller-dashboard.php">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="../public/seller-dashboard.php">Home</a></li>
                 <li class="nav-item"><a class="nav-link" href="../seller/add-gem.php">Add New Gem</a></li>
                 <li class="nav-item"><a class="nav-link" href="browse_gems.php">Browse Gems</a></li>
 
@@ -37,3 +36,83 @@ if (session_status() === PHP_SESSION_NONE) {
 
     </div>
 </nav>
+
+<style>
+    .navbar {
+    background: #fff !important;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+/* LOGO */
+.navbar-brand {
+    color: #DB2777 !important;
+    font-weight: 800 !important;
+    font-size: 28px !important;
+    text-decoration: none;
+}
+
+/* NAV LINKS */
+.nav-link {
+    color: #111 !important;
+    font-weight: 600 !important;
+    transition: 0.3s ease;
+}
+.nav-link:hover {
+    color: #EC4899 !important;
+}
+
+/* Desktop spacing */
+@media (min-width: 992px) {
+    .navbar-nav .nav-item {
+        margin-left: 12px;
+        margin-right: 12px;
+    }
+}
+
+
+.navbar-toggler {
+    border: none !important;
+}
+.navbar-toggler:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+
+
+@media (max-width: 991px) {
+
+    /* Larger dropdown container */
+    .navbar-collapse {
+        background: #fff;
+        padding: 25px 0 !important;   
+        text-align: center;           
+        border-top: 1px solid #eee;
+    }
+
+    /* Center nav list */
+    .navbar-nav {
+        width: 100%;
+        align-items: center !important; 
+    }
+
+   
+    .navbar-nav .nav-item {
+        width: 100%;
+        padding: 12px 0;
+    }
+
+    .navbar-nav .nav-link {
+        font-size: 18px !important;
+        padding: 15px 0 !important;      
+        width: 100%;
+        text-align: center;               
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .navbar-nav .nav-item:last-child .nav-link {
+        border-bottom: none;
+    }
+}
+
+</style>
