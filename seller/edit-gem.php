@@ -11,6 +11,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'seller') {
 $seller_id = $_SESSION['user_id'];
 $msg = '';
 
+// Validate gem ID
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
     die("Invalid gem ID.");
 }
@@ -56,9 +57,21 @@ if (!is_dir($cert_dir)) mkdir($cert_dir, 0777, true);
 if (!is_dir($gems_dir)) mkdir($gems_dir, 0777, true);
 if (!is_dir($vdos_dir)) mkdir($vdos_dir, 0777, true);
 
+// Helper function to render dropdowns
+function renderDropdown($name, $options, $selectedValue, $isAssoc = false) {
+    $html = "<select name='$name' required>";
+    foreach ($options as $key => $val) {
+        $value = $isAssoc ? $key : $val;
+        $label = $isAssoc ? $val : ucfirst($val);
+        $sel = ($selectedValue == $value) ? "selected" : "";
+        $html .= "<option value='$value' $sel>$label</option>";
+    }
+    $html .= "</select>";
+    return $html;
+}
+
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
     $title = trim($_POST['title']);
     $type = trim($_POST['type']);
     $carat = floatval($_POST['carat']);
@@ -166,7 +179,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 if (isset($_GET['msg'])) $msg = $_GET['msg'];
- include "../seller/seller_header.php"; 
+
+include "../seller/seller_header.php"; 
 ?>
 
 <!DOCTYPE html>
@@ -181,10 +195,21 @@ if (isset($_GET['msg'])) $msg = $_GET['msg'];
 <body class="bg-gray-50 p-6">
 
 <main class="form-box" style="position: relative;">
-<button 
-        style="position: absolute; top: 10px; right: 10px; background: transparent; border: none; font-size: 24px; cursor: pointer; color: #555;"
-        onclick="window.location.href='../public/seller-dashboard.php'"
-        title="Close">&times;</button>
+
+        <button 
+            style="
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                background: transparent;
+                border: none;
+                font-size: 24px;
+                cursor: pointer;
+                color: #555;
+            "
+            onclick="window.location.href='../public/seller-dashboard.php'"
+            title="Close"
+        >&times;</button>
 
 <h1 class="text-3xl font-bold mb-6 text-center text-pink-600">Edit Gem</h1>
 
@@ -193,7 +218,22 @@ if (isset($_GET['msg'])) $msg = $_GET['msg'];
 <?php endif; ?>
 
 <form method="POST" enctype="multipart/form-data">
-<section class="form-columns">
+
+<?php
+$types = ["diamond","ruby","sapphire","emerald","topaz","other"];
+$colors = ["white","yellow","blue","red","green","pink","purple","orange","other"];
+$origins = ["sri_lanka","india","brazil","africa","australia","other"];
+$clarities = [
+    "flawless"=>"Flawless (FL)",
+    "internally_flawless"=>"Internally Flawless (IF)",
+    "very_very_slight_inclusions"=>"Very Very Slight Inclusions (VVS1, VVS2)",
+    "very_slight_inclusions"=>"Very Slight Inclusions (VS1, VS2)",
+    "slight_inclusions"=>"Slight Inclusions (SI1, SI2)",
+    "included"=>"Included (I1, I2, I3)"
+];
+?>
+
+<div class="form-columns">
 
 <div class="form-column">
     <div class="form-row">
@@ -203,15 +243,7 @@ if (isset($_GET['msg'])) $msg = $_GET['msg'];
 
     <div class="form-row">
         <label>Type</label>
-        <select name="type" required>
-            <?php
-            $types = ["diamond","ruby","sapphire","emerald","topaz","other"];
-            foreach ($types as $t) {
-                $selected = ($gem['type']==$t) ? 'selected' : '';
-                echo "<option value='$t' $selected>".ucfirst($t)."</option>";
-            }
-            ?>
-        </select>
+        <?= renderDropdown("type", $types, $gem['type']); ?>
     </div>
 
     <div class="form-row">
@@ -219,85 +251,46 @@ if (isset($_GET['msg'])) $msg = $_GET['msg'];
         <input name="price" type="number" step="0.01" value="<?= htmlspecialchars($gem['price']) ?>" required />
     </div>
 
-    <div class="form-row">
-        <label>Add New Images</label>
-        <input name="images[]" type="file" multiple accept="image/*" />
-    </div>
-</div>
-
-<div class="form-column">
-    <div class="form-row">
-        <label>Color</label>
-        <select name="color" required>
-            <?php
-            $colors = ["white","yellow","blue","red","green","pink","purple","orange","other"];
-            foreach ($colors as $c) {
-                $selected = ($gem['color']==$c) ? 'selected' : '';
-                echo "<option value='$c' $selected>".ucfirst($c)."</option>";
-            }
-            ?>
-        </select>
-    </div>
-
-    <div class="form-row">
-        <label>Origin</label>
-        <select name="origin" required>
-            <?php
-            $origins = ["sri_lanka","india","brazil","africa","australia","other"];
-            foreach ($origins as $o) {
-                $selected = ($gem['origin']==$o) ? 'selected' : '';
-                echo "<option value='$o' $selected>".ucwords(str_replace("_"," ",$o))."</option>";
-            }
-            ?>
-        </select>
-    </div>
-
-    <div class="form-row">
-        <label>Description</label>
-        <textarea name="description" rows="4" required><?= htmlspecialchars($gem['description']) ?></textarea>
-    </div>
-</div>
-
-<div class="form-column">
-    <div class="form-row">
+        <div class="form-row">
         <label>Carat</label>
         <input name="carat" type="number" step="0.01" value="<?= htmlspecialchars($gem['carat']) ?>" required />
     </div>
 
     <div class="form-row">
         <label>Clarity</label>
-        <select name="clarity" required>
-            <?php
-            $clarities = [
-                "flawless"=>"Flawless (FL)",
-                "internally_flawless"=>"Internally Flawless (IF)",
-                "very_very_slight_inclusions"=>"Very Very Slight Inclusions (VVS1, VVS2)",
-                "very_slight_inclusions"=>"Very Slight Inclusions (VS1, VS2)",
-                "slight_inclusions"=>"Slight Inclusions (SI1, SI2)",
-                "included"=>"Included (I1, I2, I3)"
-            ];
-            foreach ($clarities as $key=>$val) {
-                $selected = ($gem['clarity']==$key) ? 'selected' : '';
-                echo "<option value='$key' $selected>$val</option>";
-            }
-            ?>
-        </select>
+        <?= renderDropdown("clarity", $clarities, $gem['clarity'], true); ?>
     </div>
 
-    <div class="checkbox-row">
-        <input name="is_negotiable" type="checkbox" <?= $gem['is_negotiable'] ? 'checked' : '' ?> />
-        <label>Negotiable</label>
+
+</div>
+
+<div class="form-column">
+    <div class="form-row">
+        <label>Color</label>
+        <?= renderDropdown("color", $colors, $gem['color']); ?>
     </div>
 
     <div class="form-row">
-        <label>Add New Videos</label>
-        <input name="videos[]" type="file" multiple accept="video/*" />
+        <label>Origin</label>
+        <?= renderDropdown("origin", $origins, $gem['origin']); ?>
+    </div>
+
+    <div class="form-row">
+        <label>Description</label>
+        <textarea name="description" rows="4" required><?= htmlspecialchars($gem['description']) ?></textarea>
+    </div>
+
+        <div class="checkbox-row">
+        <input name="is_negotiable" type="checkbox" <?= $gem['is_negotiable'] ? 'checked' : '' ?> />
+        <label>Negotiable</label>
     </div>
 </div>
-</section>
+
+
+</div>
 
 <!-- Existing Images -->
-<fieldset>
+<fieldset class="mt-6">
 <legend class="text-lg font-semibold mb-3">Existing Images</legend>
 <div class="images-grid">
 <?php foreach ($images as $img): ?>
@@ -334,24 +327,36 @@ Your browser does not support the video tag.
 <legend class="text-lg font-semibold mb-3">Certificate</legend>
 <?php if (!empty($gem['certificate'])):
     $ext = strtolower(pathinfo($gem['certificate'], PATHINFO_EXTENSION));
-    if (in_array($ext, ['jpg', 'jpeg', 'png', 'gif'])): ?>
+    if (in_array($ext, ['jpg','jpeg','png','gif'])): ?>
         <div class="certificate-preview">
             <img src="<?= htmlspecialchars($gem['certificate']) ?>" alt="Certificate Preview" />
         </div>
     <?php else: ?>
         <p><a href="<?= htmlspecialchars($gem['certificate']) ?>" target="_blank">View Certificate PDF</a></p>
 <?php endif; endif; ?>
-
 <div class="form-row mt-3">
 <label>Upload New Certificate</label>
 <input name="certificate" type="file" accept="image/*,application/pdf" />
 </div>
-</fieldset>
+<br>
+<div class="form-column">
+        <div class="form-row">
+        <label>Add New Images</label>
+        <input name="images[]" type="file" multiple accept="image/*" />
+    </div>
 
+    <div class="form-row">
+        <label>Add New Videos</label>
+        <input name="videos[]" type="file" multiple accept="video/*" />
+    </div>
+</div>
+</fieldset>
+<br>
 <div class="button-row mt-6">
 <button type="button" class="back-btn" onclick="window.location.href='../public/seller-dashboard.php'">Back</button>
 <button type="submit" class="submit-btn">Save Changes</button>
 </div>
+
 </form>
 </main>
 

@@ -112,7 +112,21 @@ if (isset($_POST['submit'])) {
 
 <body>
 
-  <div class="form-box">
+  <div class="form-box" style="position: relative;">
+            <button 
+            style="
+                position: absolute;
+                top: 10px;
+                right: 10px;
+                background: transparent;
+                border: none;
+                font-size: 24px;
+                cursor: pointer;
+                color: #555;
+            "
+            onclick="window.location.href='../public/seller-dashboard.php'"
+            title="Close"
+        >&times;</button>
     <h1 class="title">Add New Gem</h1>
 
     <?php if ($msg): ?>
