@@ -9,36 +9,33 @@ if(!isset($_SESSION['user_id']) || $_SESSION['role'] != 'admin'){
     exit;
 }
 ?>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <link rel="stylesheet" href="../css/admin-header.css">
 
-<header class="navbar">
-  <div class="header-container">
-    <!-- LOGO -->
-    <a href="admin-dashboard.php" class="navbar-brand">Gem Admin</a>
+<nav class="navbar navbar-expand-lg bg-white shadow-sm sticky-top">
+    <div class="container">
 
-    <!-- HAMBURGER BUTTON FOR MOBILE ONLY -->
-    <button class="navbar-toggler" aria-label="Toggle Menu">&#9776;</button>
+        <!-- Logo -->
+        <a class="navbar-brand fw-bold fs-3" href="admin-dashboard.php">Gem Admin</a>
 
-    <!-- NAVIGATION -->
-    <nav class="navbar-collapse">
-      <ul class="navbar-nav">
-        <li class="nav-item"><a href="dashboard.php" class="nav-link">Dashboard</a></li>
-        <li class="nav-item"><a href="approve-sellers.php" class="nav-link">Approve Sellers</a></li>
-        <li class="nav-item"><a href="approve-listings.php" class="nav-link">Approve Listings</a></li>
-        <li class="nav-item"><a href="blog_approve.php" class="nav-link">Approve Blogs</a></li>
-        <li class="nav-item"><a href="../logout.php" class="nav-link">Logout</a></li>
-      </ul>
-    </nav>
-  </div>
-</header>
+        <!-- Hamburger Toggle -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#adminNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
 
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    const menuToggle = document.querySelector('.navbar-toggler');
-    const navbarCollapse = document.querySelector('.navbar-collapse');
+        <!-- Nav Menu -->
+        <div class="collapse navbar-collapse" id="adminNav">
+            <ul class="navbar-nav ms-auto gap-lg-3">
 
-    menuToggle.addEventListener('click', () => {
-        navbarCollapse.classList.toggle('active');
-    });
-});
-</script>
+                <li class="nav-item"><a class="nav-link" href="dashboard.php">Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link" href="approve-sellers.php">Approve Sellers</a></li>
+                <li class="nav-item"><a class="nav-link" href="approve-listings.php">Approve Listings</a></li>
+                <li class="nav-item"><a class="nav-link" href="blog_approve.php">Approve Blogs</a></li>
+                <li class="nav-item"><a class="nav-link" href="../logout.php">Logout</a></li>
+
+            </ul>
+        </div>
+
+    </div>
+</nav>
