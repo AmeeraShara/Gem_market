@@ -10,12 +10,22 @@ if(!isset($_SESSION['user_id']) || $_SESSION['role'] != 'seller'){
 
 $msg = "";
 
+// Fetch seller's approved gems for dropdown
+$user_id = intval($_SESSION['user_id']);
+$resGems = $conn->query("SELECT id, title FROM gems WHERE seller_id=$user_id AND status='approved'");
+$sellerGems = [];
+while($gem = $resGems->fetch_assoc()){
+    $sellerGems[] = $gem;
+}
+
 if($_SERVER['REQUEST_METHOD'] === 'POST'){
     $title = $conn->real_escape_string($_POST['title']);
     $content = $conn->real_escape_string($_POST['content']);
+    $gem_id = !empty($_POST['gem_id']) ? intval($_POST['gem_id']) : 'NULL';
     $user_id = intval($_SESSION['user_id']);
 
-    $conn->query("INSERT INTO blogs (user_id,title,content) VALUES ($user_id,'$title','$content')");
+    // Insert blog
+    $conn->query("INSERT INTO blogs (user_id, gem_id, title, content) VALUES ($user_id, $gem_id, '$title', '$content')");
     $blog_id = $conn->insert_id;
 
     // Upload Images
@@ -74,9 +84,20 @@ include "../seller/seller_header.php";
                     <label>Title</label>
                     <input type="text" name="title" required>
                 </div>
-                                <div class="form-row">
+
+                <div class="form-row">
                     <label>Content</label>
                     <textarea name="content" rows="5" required></textarea>
+                </div>
+
+                <div class="form-row">
+                    <label>Associated Gem </label>
+                    <select name="gem_id">
+                        <option value="">-- None --</option>
+                        <?php foreach($sellerGems as $gem): ?>
+                            <option value="<?= $gem['id'] ?>"><?= htmlspecialchars($gem['title']) ?></option>
+                        <?php endforeach; ?>
+                    </select>
                 </div>
 
                 <div class="form-row">
@@ -91,7 +112,6 @@ include "../seller/seller_header.php";
             </div>
 
             <div class="form-column">
-
             </div>
         </div>
 
