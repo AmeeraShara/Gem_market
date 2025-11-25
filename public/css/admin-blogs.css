@@ -1,0 +1,153 @@
+.form-box {
+    width: 100%;
+    max-width: 1000px;
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    border: 2px solid #F9A8D4;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+    overflow-x: auto;
+}
+
+.title {
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+    color: #DB2777;
+    margin-bottom: 20px;
+}
+
+.blog-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.blog-table th,
+.blog-table td {
+    padding: 12px 15px;
+    border: 1px solid #F9A8D4;
+    text-align: center;
+    font-size: 14px;
+}
+
+.blog-table th {
+    background-color: #EC4899;
+    color: white;
+    font-weight: 600;
+}
+
+.blog-table tr:nth-child(even) {
+    background-color: #FFF0F6;
+}
+
+.blog-table tr:hover {
+    background-color: #FFE4F0;
+}
+
+.doc-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 6px;
+    object-fit: cover;
+    border: 1px solid #ddd;
+}
+
+.approve-btn,
+.reject-btn {
+    border: none;
+    padding: 6px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    margin: 2px;
+}
+
+.approve-btn {
+    background-color: #10B981;
+    color: #fff;
+}
+
+.reject-btn {
+    background-color: #EF4444;
+    color: #fff;
+}
+
+.approve-btn:hover {
+    background-color: #0f9d6f;
+}
+
+.reject-btn:hover {
+    background-color: #d63a3a;
+}
+
+.status-approved {
+    color: #10B981;
+    font-weight: bold;
+}
+
+.status-rejected {
+    color: #EF4444;
+    font-weight: bold;
+}
+
+.status-msg {
+    margin-top: 15px;
+    text-align: center;
+    font-weight: bold;
+    color: #444;
+}
+
+/* MOBILE RESPONSIVE */
+@media (max-width: 700px) {
+
+    /* Remove form-box styling */
+    .form-box {
+        padding: 0;
+        margin: 0;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+        background: transparent;
+        overflow: visible;
+    }
+
+    .blog-table thead {
+        display: none;
+    }
+
+    .blog-table tr {
+        display: block;
+        margin-bottom: 15px;
+        border-radius: 12px;
+        padding: 15px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+        background: #fff;
+    }
+
+    .blog-table td {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px;
+        text-align: left;
+    }
+
+    .blog-table td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        color: #EC4899;
+        flex-basis: 45%;
+    }
+
+    .doc-img {
+        width: 60px;
+        height: 60px;
+    }
+
+    .approve-btn,
+    .reject-btn {
+        font-size: 12px;
+        padding: 5px 8px;
+    }
+}

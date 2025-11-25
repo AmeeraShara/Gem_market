@@ -2,6 +2,7 @@
 session_start();
 include __DIR__ . '/../../config/db.php'; 
 include 'admin_header.php';
+
 // Only admin access
 if(!isset($_SESSION['user_id']) || $_SESSION['role'] != 'admin'){
     header("Location: ../login.php");
@@ -37,64 +38,75 @@ $stmt->execute();
 $result = $stmt->get_result();
 ?>
 
-<h2 style="font-size:18px; font-weight:bold; margin-bottom:12px;">Pending Blogs</h2>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pending Blogs - Admin Dashboard</title>
+<link rel="stylesheet" href="../css/admin-blogs.css">
+</head>
+<body>
 
-<table style="width:100%; border-collapse:collapse; font-size:14px;">
-    <thead>
-        <tr style="background-color:#f3f3f3;">
-            <th style="border:1px solid #ccc; padding:8px;">Title</th>
-            <th style="border:1px solid #ccc; padding:8px;">Author</th>
-            <th style="border:1px solid #ccc; padding:8px;">Featured Image</th>
-            <th style="border:1px solid #ccc; padding:8px;">Preview</th>
-            <th style="border:1px solid #ccc; padding:8px;">Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php while($row = $result->fetch_assoc()) { ?>
-        <tr id="blogRow_<?php echo $row['id']; ?>">
-            <td style="border:1px solid #ccc; padding:6px;"><?= htmlspecialchars($row['title']) ?></td>
-            <td style="border:1px solid #ccc; padding:6px;"><?= htmlspecialchars($row['full_name']) ?></td>
-            <td style="border:1px solid #ccc; padding:6px; text-align:center;">
-                <?php if($row['featured_image'] && file_exists('../' . $row['featured_image'])): ?>
-                    <img src="<?= '../' . htmlspecialchars($row['featured_image']) ?>" 
-                         alt="Featured Image" style="width:50px; height:50px; object-fit:cover; border-radius:4px; border:1px solid #ccc;">
-                <?php else: ?>
-                    No Image
-                <?php endif; ?>
-            </td>
-            <td style="border:1px solid #ccc; padding:6px;"><?= nl2br(htmlspecialchars(substr($row['content'],0,100))) ?>...</td>
-            <td style="border:1px solid #ccc; padding:6px; text-align:center;">
-                <button onclick="updateBlogStatus(<?= $row['id']; ?>,'approved', this)" 
-                        style="color:green; text-decoration:underline; margin-right:8px; background:none; border:none; cursor:pointer;">
-                    Approve
-                </button>
-                <button onclick="updateBlogStatus(<?= $row['id']; ?>,'rejected', this)" 
-                        style="color:red; text-decoration:underline; background:none; border:none; cursor:pointer;">
-                    Reject
-                </button>
-            </td>
-        </tr>
-        <?php } ?>
-    </tbody>
-</table>
+<div class="form-box">
 
-<div id="msg" style="margin-top:10px; font-weight:bold;"></div>
+    <h1 class="title">Pending Blogs</h1>
+
+    <table class="blog-table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Featured Image</th>
+                <th>Preview</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        <?php while($row = $result->fetch_assoc()): ?>
+            <tr id="blogRow_<?= $row['id']; ?>">
+                <td data-label="Title"><?= htmlspecialchars($row['title']); ?></td>
+                <td data-label="Author"><?= htmlspecialchars($row['full_name']); ?></td>
+                <td data-label="Featured Image" style="text-align:center;">
+                    <?php if($row['featured_image'] && file_exists('../' . $row['featured_image'])): ?>
+                        <img src="<?= '../' . htmlspecialchars($row['featured_image']); ?>" class="doc-img" alt="Featured Image">
+                    <?php else: ?>
+                        No Image
+                    <?php endif; ?>
+                </td>
+                <td data-label="Preview"><?= nl2br(htmlspecialchars(substr($row['content'],0,100))); ?>...</td>
+                <td data-label="Actions">
+                    <button class="approve-btn" onclick="updateBlogStatus(<?= $row['id']; ?>,'approved', this)">Approve</button>
+                    <button class="reject-btn" onclick="updateBlogStatus(<?= $row['id']; ?>,'rejected', this)">Reject</button>
+                </td>
+            </tr>
+        <?php endwhile; ?>
+        </tbody>
+    </table>
+
+    <div id="msg" class="status-msg"></div>
+</div>
 
 <script>
 function updateBlogStatus(id, status, btn){
+    if (!confirm(`Are you sure you want to mark this blog as ${status}?`)) return;
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", "", true); // same page
+    xhr.open("POST", "", true);
     xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
     xhr.onreadystatechange = function() {
         if(xhr.readyState === 4 && xhr.status === 200){
             document.getElementById('msg').innerHTML = xhr.responseText;
-
-            // Replace buttons with status text
-            btn.parentElement.innerHTML = '<span style="color:' + (status==='approved'?'green':'red') + '; font-weight:bold;">' + status.toUpperCase() + ' </span>';
+            btn.parentElement.innerHTML =
+                "<span class='" + (status==='approved'?'status-approved':'status-rejected') + "'>" 
+                + status.toUpperCase() + "</span>";
         }
     };
     xhr.send("id=" + id + "&status=" + status);
 }
 </script>
+
+</body>
+</html>
 
 <?php $stmt->close(); ?>
