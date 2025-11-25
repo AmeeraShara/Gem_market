@@ -37,7 +37,7 @@ if (session_status() === PHP_SESSION_NONE) {
                     <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Blogs</a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="../seller/blog_add.php">Add New Blog</a></li>
-                        <li><a class="dropdown-item" href="../seller/manage_blogs.php">Manage Blogs</a></li>
+                        <li><a class="dropdown-item" href="../seller/manage-blogs.php">Manage Blogs</a></li>
                     </ul>
                 </li>
 
