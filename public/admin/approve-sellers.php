@@ -96,7 +96,6 @@ $result = $stmt->get_result();
         </tbody>
     </table>
 
-    <div id="msg" class="status-msg"></div>
 </div>
 
 <script>

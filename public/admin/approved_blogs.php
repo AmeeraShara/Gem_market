@@ -27,7 +27,18 @@ if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'], $_POST['action']
     }
 }
 
-// Fetch approved blogs
+// Pagination settings
+$limit = 5; // blogs per page
+$page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+$offset = ($page - 1) * $limit;
+
+// Count total approved blogs
+$totalResult = $conn->query("SELECT COUNT(*) AS total FROM blogs WHERE status='approved'");
+$totalRow = $totalResult->fetch_assoc();
+$totalBlogs = $totalRow['total'];
+$totalPages = ceil($totalBlogs / $limit);
+
+// Fetch approved blogs with LIMIT & OFFSET
 $stmt = $conn->prepare("
     SELECT b.id, b.title, b.content, u.full_name,
            (SELECT image_path FROM blog_images WHERE blog_id=b.id LIMIT 1) AS featured_image
@@ -35,7 +46,9 @@ $stmt = $conn->prepare("
     JOIN users u ON b.user_id=u.id
     WHERE b.status='approved'
     ORDER BY b.created_at DESC
+    LIMIT ? OFFSET ?
 ");
+$stmt->bind_param("ii", $limit, $offset);
 $stmt->execute();
 $result = $stmt->get_result();
 ?>
@@ -84,6 +97,14 @@ $result = $stmt->get_result();
         <?php endwhile; ?>
         </tbody>
     </table>
+</div>
+<!-- Pagination -->
+<div class="pagination">
+    <?php if($totalPages > 1): ?>
+        <?php for($i = 1; $i <= $totalPages; $i++): ?>
+            <a href="?page=<?= $i ?>" class="<?= $i == $page ? 'active' : '' ?>"><?= $i ?></a>
+        <?php endfor; ?>
+    <?php endif; ?>
 </div>
 
 <!-- Image Modal -->

@@ -27,14 +27,27 @@ if($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'], $_POST['action']
     }
 }
 
-// Fetch approved gems with seller info
+// Pagination settings
+$limit = 10; 
+$page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+$offset = ($page - 1) * $limit;
+
+// Count total approved gems
+$totalResult = $conn->query("SELECT COUNT(*) AS total FROM gems WHERE status='approved'");
+$totalRow = $totalResult->fetch_assoc();
+$totalGems = $totalRow['total'];
+$totalPages = ceil($totalGems / $limit);
+
+// Fetch approved gems with seller info for current page
 $stmt = $conn->prepare("
     SELECT g.*, u.full_name AS seller_name
     FROM gems g
     JOIN users u ON g.seller_id = u.id
     WHERE g.status='approved'
     ORDER BY g.id DESC
+    LIMIT ? OFFSET ?
 ");
+$stmt->bind_param("ii", $limit, $offset);
 $stmt->execute();
 $result = $stmt->get_result();
 ?>
@@ -121,7 +134,18 @@ $result = $stmt->get_result();
         <?php endwhile; ?>
         </tbody>
     </table>
+
+
 </div>
+
+    <!-- Pagination -->
+    <div class="pagination">
+        <?php if($totalPages > 1): ?>
+            <?php for($i=1; $i<=$totalPages; $i++): ?>
+                <a href="?page=<?= $i ?>" class="<?= $i==$page ? 'active' : '' ?>"><?= $i ?></a>
+            <?php endfor; ?>
+        <?php endif; ?>
+    </div>
 
 <!-- Image Modal -->
 <div id="imgModal" class="img-modal">

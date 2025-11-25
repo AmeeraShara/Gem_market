@@ -81,6 +81,33 @@
     color: #444;
 }
 
+.pagination {
+    display: flex;         
+    justify-content: center; 
+    align-items: center;    
+    flex-wrap: wrap;         
+    margin: 20px 0;
+    gap: 5px;               
+}
+
+.pagination a {
+    display: inline-block; 
+    padding: 8px 12px;
+    margin: 2px;
+    border-radius: 6px;
+    border: 1px solid #EC4899;
+    text-decoration: none;
+    color: #EC4899;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.pagination a.active,
+.pagination a:hover {
+    background-color: #EC4899;
+    color: #fff;
+}
+
 /* MOBILE RESPONSIVE */
 @media (max-width: 700px) {
 

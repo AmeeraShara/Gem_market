@@ -27,17 +27,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'], $_POST['action'
     }
 }
 
-// Fetch approved seller KYC
+// Pagination settings
+$limit = 5; 
+$page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+$offset = ($page - 1) * $limit;
+
+// Count total approved sellers
+$totalResult = $conn->query("SELECT COUNT(*) AS total FROM seller_kyc WHERE status='approved'");
+$totalRow = $totalResult->fetch_assoc();
+$totalSellers = $totalRow['total'];
+$totalPages = ceil($totalSellers / $limit);
+
+// Fetch approved seller KYC with LIMIT and OFFSET
 $stmt = $conn->prepare("
     SELECT k.id, u.full_name, u.email, k.ngja_license, k.id_proof
     FROM seller_kyc k
     JOIN users u ON k.user_id = u.id
     WHERE k.status='approved'
     ORDER BY k.id DESC
+    LIMIT ? OFFSET ?
 ");
+$stmt->bind_param("ii", $limit, $offset);
 $stmt->execute();
 $result = $stmt->get_result();
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -88,6 +102,14 @@ $result = $stmt->get_result();
         <?php endwhile; ?>
         </tbody>
     </table>
+</div>
+<!-- Pagination -->
+<div class="pagination">
+    <?php if($totalPages > 1): ?>
+        <?php for($i = 1; $i <= $totalPages; $i++): ?>
+            <a href="?page=<?= $i ?>" class="<?= $i == $page ? 'active' : '' ?>"><?= $i ?></a>
+        <?php endfor; ?>
+    <?php endif; ?>
 </div>
 
 <!-- Image Modal -->
