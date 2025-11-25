@@ -16,7 +16,7 @@ if(!isset($_SESSION['user_id']) || $_SESSION['role'] != 'admin'){
     <div class="container">
 
         <!-- Logo -->
-        <a class="navbar-brand fw-bold fs-3" href="admin-dashboard.php">Gem Admin</a>
+        <a class="navbar-brand fw-bold fs-3" href="admin-dashboard.php"> Admin</a>
 
         <!-- Hamburger Toggle -->
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#adminNav">
@@ -35,7 +35,7 @@ if(!isset($_SESSION['user_id']) || $_SESSION['role'] != 'admin'){
                     <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Gems</a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="approve-listings.php?status=pending">Pending Gems</a></li>
-                        <li><a class="dropdown-item" href="approve-listings.php?status=approved">Approved Gems</a></li>
+                        <li><a class="dropdown-item" href="approved_gems.php?status=approved">Approved Gems</a></li>
                     </ul>
                 </li>
 
@@ -44,7 +44,7 @@ if(!isset($_SESSION['user_id']) || $_SESSION['role'] != 'admin'){
                     <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Sellers</a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="approve-sellers.php?status=pending">Pending Sellers</a></li>
-                        <li><a class="dropdown-item" href="approve-sellers.php?status=approved">Approved Sellers</a></li>
+                        <li><a class="dropdown-item" href="approved_sellers.php?status=approved">Approved Sellers</a></li>
                     </ul>
                 </li>
 
@@ -53,7 +53,7 @@ if(!isset($_SESSION['user_id']) || $_SESSION['role'] != 'admin'){
                     <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">Blogs</a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="blog_approve.php?status=pending">Pending Blogs</a></li>
-                        <li><a class="dropdown-item" href="blog_approve.php?status=approved">Approved Blogs</a></li>
+                        <li><a class="dropdown-item" href="approved_blogs.php?status=approved">Approved Blogs</a></li>
                     </ul>
                 </li>
 

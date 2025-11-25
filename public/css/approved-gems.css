@@ -1,0 +1,171 @@
+/* Approved Gems Table - similar to pending gems */
+.form-box {
+    width: 100%;
+    max-width: 1000px;
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    border: 2px solid #F9A8D4;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+    overflow-x: auto;
+}
+
+.title {
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+    color: #DB2777;
+    margin-bottom: 20px;
+}
+
+.gem-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.gem-table th,
+.gem-table td {
+    padding: 12px 15px;
+    border: 1px solid #F9A8D4;
+    text-align: center;
+    font-size: 14px;
+}
+
+.gem-table th {
+    background-color: #EC4899;
+    color: white;
+    font-weight: 600;
+}
+
+.gem-table tr:nth-child(even) {
+    background-color: #FFF0F6;
+}
+
+.gem-table tr:hover {
+    background-color: #FFE4F0;
+}
+
+.doc-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 6px;
+    object-fit: cover;
+    border: 1px solid #ddd;
+}
+
+.reject-btn {
+    border: none;
+    padding: 5px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    background-color: #EF4444;
+    color: #fff;
+}
+
+.reject-btn:hover {
+    background-color: #d63a3a;
+}
+
+.status-rejected {
+    color: #EF4444;
+    font-weight: bold;
+}
+
+.status-msg {
+    margin-bottom: 15px;
+    text-align: center;
+    font-weight: bold;
+    color: #444;
+}
+
+/* MOBILE RESPONSIVE */
+@media (max-width: 700px) {
+
+    .form-box {
+        padding: 0;
+        margin: 0;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+        background: transparent;
+        overflow: visible;
+    }
+
+    .gem-table thead {
+        display: none;
+    }
+
+    .gem-table tr {
+        display: block;
+        margin-bottom: 15px;
+        border-radius: 12px;
+        padding: 15px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+        background: #fff;
+    }
+
+    .gem-table td {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px;
+        text-align: left;
+    }
+
+    .gem-table td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        color: #EC4899;
+        flex-basis: 45%;
+    }
+
+    .doc-img {
+        width: 60px;
+        height: 60px;
+    }
+
+    .reject-btn {
+        font-size: 12px;
+        padding: 5px 8px;
+    }
+}
+
+/* Image modal styles (same as pending gems) */
+.img-modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    padding-top: 60px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.8);
+}
+
+.img-modal-content {
+    margin: auto;
+    display: block;
+    max-width: 90%;
+    max-height: 80vh;
+    border-radius: 10px;
+    box-shadow: 0 0 10px #fff;
+}
+
+.img-close {
+    position: absolute;
+    top: 20px;
+    right: 35px;
+    color: #fff;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    user-select: none;
+}
+
+.img-close:hover {
+    color: #bbb;
+}
