@@ -1,51 +1,72 @@
-/* GENERAL BODY */
+:root {
+    --body-bg: #FCE7F3;
+    --body-color: #111;
+    --font-family: 'Arial', sans-serif;
+
+    --container-max-width: 1200px;
+    --container-padding: 16px;
+
+    --hero-bg-gradient: linear-gradient(135deg, #F9A8D4 0%, #EC4899 100%);
+    --hero-color: #fff;
+    --hero-border-radius: 12px;
+    --hero-box-shadow: rgba(0,0,0,0.1);
+
+    --hero-h1-font-size: 32px;
+    --hero-p-font-size: 18px;
+
+    --btn-primary-bg: #fff;
+    --btn-primary-color: #DB2777;
+    --btn-primary-hover-bg: #F9A8D4;
+    --btn-primary-hover-color: #fff;
+    --btn-primary-padding: 12px 28px;
+    --btn-primary-border-radius: 9999px;
+    --btn-primary-font-weight: 600;
+}
+
 body {
     margin: 0;
     padding: 0;
-    font-family: 'Arial', sans-serif;
-    background: #FCE7F3;
-    color: #111;
+    font-family: var(--font-family);
+    background: var(--body-bg);
+    color: var(--body-color);
 }
 
-/* CONTAINER */
 .container {
-    max-width: 1200px;
+    max-width: var(--container-max-width);
     margin: 0 auto;
-    padding: 16px;
+    padding: var(--container-padding);
     text-align: center;
 }
 
-/* DASHBOARD HERO SECTION */
 .dashboard-hero {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    padding: 80px 16px;
-    background: linear-gradient(135deg, #F9A8D4 0%, #EC4899 100%);
-    color: #fff;
-    border-radius: 12px;
+    padding: 80px var(--container-padding);
+    background: var(--hero-bg-gradient);
+    color: var(--hero-color);
+    border-radius: var(--hero-border-radius);
     margin: 32px;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+    box-shadow: 0 8px 30px var(--hero-box-shadow);
 }
 
 .dashboard-hero h1 {
-    font-size: 36px;
+    font-size: var(--hero-h1-font-size);
     margin-bottom: 16px;
 }
 
 .dashboard-hero p {
-    font-size: 18px;
+    font-size: var(--hero-p-font-size);
     margin-bottom: 24px;
 }
 
-/* BUTTONS */
 .btn-primary {
-    background-color: #fff;
-    color: #DB2777;
-    padding: 12px 28px;
-    border-radius: 9999px;
-    font-weight: 600;
+    background-color: var(--btn-primary-bg);
+    color: var(--btn-primary-color);
+    padding: var(--btn-primary-padding);
+    border-radius: var(--btn-primary-border-radius);
+    font-weight: var(--btn-primary-font-weight);
     text-decoration: none;
     display: inline-block;
     margin: 8px;
@@ -57,14 +78,14 @@ body {
 }
 
 .btn-primary:hover {
-    background-color: #F9A8D4;
-    color: #fff;
+    background-color: var(--btn-primary-hover-bg);
+    color: var(--btn-primary-hover-color);
 }
 
 /* RESPONSIVE */
 @media (max-width: 1024px) {
     .dashboard-hero {
-        padding: 60px 16px;
+        padding: 60px var(--container-padding);
         margin: 24px;
     }
 }

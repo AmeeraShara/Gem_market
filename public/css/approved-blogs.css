@@ -1,23 +1,43 @@
+
+:root {
+    --pink-500: #EC4899;
+    --pink-600: #DB2777;
+    --red-500: #EF4444;
+    --red-600: #d63a3a;
+    --white: #fff;
+    --black: #111;
+    --gray-light: #ddd;
+    --gray-lighter: #F9A8D4;
+    --gray-table-alt: #FFF0F6;
+    --gray-hover: #FFE4F0;
+    --shadow-box: rgba(0,0,0,0.1);
+    --shadow-box-sm: rgba(0,0,0,0.08);
+    --text-dark: #444;
+}
+
+/* FORM BOX */
 .form-box {
     width: 100%;
     max-width: 1000px;
-    background: #fff;
+    background: var(--white);
     padding: 30px;
     border-radius: 12px;
-    border: 2px solid #F9A8D4;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    border: 2px solid var(--gray-lighter);
+    box-shadow: 0 8px 20px var(--shadow-box);
     margin: 20px auto;
     overflow-x: auto;
 }
 
+/* TITLE */
 .title {
     text-align: center;
     font-size: 28px;
     font-weight: bold;
-    color: #DB2777;
+    color: var(--pink-600);
     margin-bottom: 20px;
 }
 
+/* GEM TABLE */
 .gem-table {
     width: 100%;
     border-collapse: collapse;
@@ -26,33 +46,35 @@
 .gem-table th,
 .gem-table td {
     padding: 12px 15px;
-    border: 1px solid #F9A8D4;
+    border: 1px solid var(--gray-lighter);
     text-align: center;
     font-size: 14px;
 }
 
 .gem-table th {
-    background-color: #EC4899;
-    color: #fff;
+    background-color: var(--pink-500);
+    color: var(--white);
     font-weight: 600;
 }
 
 .gem-table tr:nth-child(even) {
-    background-color: #FFF0F6;
+    background-color: var(--gray-table-alt);
 }
 
 .gem-table tr:hover {
-    background-color: #FFE4F0;
+    background-color: var(--gray-hover);
 }
 
+/* DOC IMAGE */
 .doc-img {
     width: 50px;
     height: 50px;
     border-radius: 6px;
     object-fit: cover;
-    border: 1px solid #ddd;
+    border: 1px solid var(--gray-light);
 }
 
+/* REJECT BUTTON */
 .reject-btn {
     border: none;
     padding: 5px 12px;
@@ -60,16 +82,17 @@
     cursor: pointer;
     font-size: 13px;
     font-weight: 600;
-    background-color: #EF4444;
-    color: #fff;
+    background-color: var(--red-500);
+    color: var(--white);
 }
 
 .reject-btn:hover {
-    background-color: #d63a3a;
+    background-color: var(--red-600);
 }
 
+/* STATUS */
 .status-rejected {
-    color: #EF4444;
+    color: var(--red-500);
     font-weight: bold;
 }
 
@@ -77,9 +100,10 @@
     margin-bottom: 15px;
     text-align: center;
     font-weight: bold;
-    color: #444;
+    color: var(--text-dark);
 }
 
+/* PAGINATION */
 .pagination {
     display: flex;         
     justify-content: center; 
@@ -94,19 +118,20 @@
     padding: 8px 12px;
     margin: 2px;
     border-radius: 6px;
-    border: 1px solid #EC4899;
+    border: 1px solid var(--pink-500);
     text-decoration: none;
-    color: #EC4899;
+    color: var(--pink-500);
     font-weight: 600;
     transition: 0.3s;
 }
 
 .pagination a.active,
 .pagination a:hover {
-    background-color: #EC4899;
-    color: #fff;
+    background-color: var(--pink-500);
+    color: var(--white);
 }
 
+/* MOBILE RESPONSIVE */
 @media (max-width: 700px) {
     .form-box {
         padding: 0;
@@ -124,8 +149,8 @@
         margin-bottom: 15px;
         border-radius: 12px;
         padding: 15px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-        background: #fff;
+        box-shadow: 0 4px 10px var(--shadow-box-sm);
+        background: var(--white);
     }
 
     .gem-table td {
@@ -138,7 +163,7 @@
     .gem-table td::before {
         content: attr(data-label);
         font-weight: bold;
-        color: #EC4899;
+        color: var(--pink-500);
         flex-basis: 45%;
     }
 
@@ -153,7 +178,7 @@
     }
 }
 
-/* Image modal */
+/* IMAGE MODAL */
 .img-modal {
     display: none;
     position: fixed;
@@ -173,14 +198,14 @@
     max-width: 90%;
     max-height: 80vh;
     border-radius: 10px;
-    box-shadow: 0 0 10px #fff;
+    box-shadow: 0 0 10px var(--white);
 }
 
 .img-close {
     position: absolute;
     top: 20px;
     right: 35px;
-    color: #fff;
+    color: var(--white);
     font-size: 40px;
     font-weight: bold;
     cursor: pointer;

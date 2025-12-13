@@ -1,8 +1,29 @@
+:root {
+    --body-bg: #FCE7F3;
+    --font-family: Arial, sans-serif;
+    --form-bg: #FDF2F8;
+    --form-border: #F9A8D4;
+    --form-shadow: rgba(0, 0, 0, 0.15);
+    --title-color: #DB2777;
+    --table-header-bg: #FCE7F3;
+    --table-header-color: #DB2777;
+    --table-row-alt-bg: #FFF0F6;
+    --status-approved: #059669;
+    --status-pending: #D97706;
+    --status-rejected: #DC2626;
+    --btn-view-bg: #DB2777;
+    --btn-view-color: #fff;
+    --btn-edit-bg: #FBBF24;
+    --btn-edit-color: #fff;
+    --btn-delete-bg: #EF4444;
+    --btn-delete-color: #fff;
+}
+
 body {
     margin: 0;
     padding: 0;
-    font-family: Arial, sans-serif;
-    background: #FCE7F3;
+    font-family: var(--font-family);
+    background: var(--body-bg);
     display: flex;
     flex-direction: column;
     min-height: 100vh;
@@ -11,11 +32,11 @@ body {
 .form-box {
     width: 100%;
     max-width: 1000px;
-    background: #FDF2F8;
+    background: var(--form-bg);
     padding: 40px 30px;
     border-radius: 18px;
-    border: 2px solid #F9A8D4;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+    border: 2px solid var(--form-border);
+    box-shadow: 0 8px 30px var(--form-shadow);
     margin: 20px auto;
     overflow-x: auto;
 }
@@ -24,7 +45,7 @@ body {
     text-align: center;
     font-size: 28px;
     font-weight: bold;
-    color: #DB2777;
+    color: var(--title-color);
 }
 
 .blog-table {
@@ -32,27 +53,26 @@ body {
     border-collapse: collapse;
 }
 
-.blog-table th, .blog-table td {
+.blog-table th,
+.blog-table td {
     padding: 12px 15px;
-    border: 1px solid #F9A8D4;
+    border: 1px solid var(--form-border);
     text-align: left;
 }
 
 .blog-table th {
-    background-color: #FCE7F3;
-    color: #DB2777;
+    background-color: var(--table-header-bg);
+    color: var(--table-header-color);
 }
 
 .blog-table tr:nth-child(even) {
-    background-color: #FFF0F6;
+    background-color: var(--table-row-alt-bg);
 }
 
-/* Status colors */
-.status-approved { color: #059669; font-weight: bold; }
-.status-pending { color: #D97706; font-weight: bold; }
-.status-rejected { color: #DC2626; font-weight: bold; }
+.status-approved { color: var(--status-approved); font-weight: bold; }
+.status-pending { color: var(--status-pending); font-weight: bold; }
+.status-rejected { color: var(--status-rejected); font-weight: bold; }
 
-/* Buttons */
 .view-btn, .action-btn {
     padding: 6px 10px;
     border: none;
@@ -61,11 +81,10 @@ body {
     margin-right: 5px;
 }
 
-.view-btn { background: #DB2777; color: white; }
-.action-btn.edit { background: #FBBF24; color: white; }
-.action-btn.delete { background: #EF4444; color: white; }
+.view-btn { background: var(--btn-view-bg); color: var(--btn-view-color); }
+.action-btn.edit { background: var(--btn-edit-bg); color: var(--btn-edit-color); }
+.action-btn.delete { background: var(--btn-delete-bg); color: var(--btn-delete-color); }
 
-/* Mobile responsive */
 @media (max-width: 600px) {
 
     .form-box {
@@ -80,10 +99,10 @@ body {
 
     .blog-table tr {
         margin-bottom: 15px;
-        border: 2px solid #F9A8D4;
+        border: 2px solid var(--form-border);
         border-radius: 12px;
         padding: 20px;
-        background-color: #FFF0F6;
+        background-color: var(--table-row-alt-bg);
         box-shadow: 0 4px 10px rgba(0,0,0,0.08);
         display: block;
     }

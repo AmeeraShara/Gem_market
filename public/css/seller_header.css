@@ -1,34 +1,43 @@
-.navbar {
-    background: #fff !important;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+:root {
+    --navbar-bg: #fff;
+    --navbar-shadow: rgba(0, 0, 0, 0.1);
+    --navbar-logo: #DB2777;
+    --navbar-logo-font-weight: 800;
+    --navbar-logo-font-size: 28px;
+    --nav-link-color: #111;
+    --nav-link-hover: #EC4899;
+    --nav-border: #eee;
+    --nav-border-bottom: #f0f0f0;
 }
 
-/* LOGO */
+.navbar {
+    background: var(--navbar-bg) !important;
+    box-shadow: 0 2px 10px var(--navbar-shadow);
+}
+
 .navbar-brand {
-    color: #DB2777 !important;
-    font-weight: 800 !important;
-    font-size: 28px !important;
+    color: var(--navbar-logo) !important;
+    font-weight: var(--navbar-logo-font-weight) !important;
+    font-size: var(--navbar-logo-font-size) !important;
     text-decoration: none;
 }
 
-/* NAV LINKS */
 .nav-link {
-    color: #111 !important;
+    color: var(--nav-link-color) !important;
     font-weight: 600 !important;
     transition: 0.3s ease;
 }
+
 .nav-link:hover {
-    color: #EC4899 !important;
+    color: var(--nav-link-hover) !important;
 }
 
-/* Desktop spacing */
 @media (min-width: 992px) {
     .navbar-nav .nav-item {
         margin-left: 12px;
         margin-right: 12px;
     }
 }
-
 
 .navbar-toggler {
     border: none !important;
@@ -38,25 +47,20 @@
     box-shadow: none !important;
 }
 
-
-
 @media (max-width: 991px) {
 
-    /* Larger dropdown container */
     .navbar-collapse {
-        background: #fff;
+        background: var(--navbar-bg);
         padding: 25px 0 !important;   
         text-align: center;           
-        border-top: 1px solid #eee;
+        border-top: 1px solid var(--nav-border);
     }
 
-    /* Center nav list */
     .navbar-nav {
         width: 100%;
         align-items: center !important; 
     }
 
-   
     .navbar-nav .nav-item {
         width: 100%;
         padding: 12px 0;
@@ -67,7 +71,7 @@
         padding: 15px 0 !important;      
         width: 100%;
         text-align: center;               
-        border-bottom: 1px solid #f0f0f0;
+        border-bottom: 1px solid var(--nav-border-bottom);
     }
 
     .navbar-nav .nav-item:last-child .nav-link {

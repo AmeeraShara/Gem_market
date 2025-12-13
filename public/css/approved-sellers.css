@@ -1,11 +1,24 @@
-/* Same style as approved gems */
+:root {
+    --primary-color: #DB2777;
+    --secondary-color: #EC4899;
+    --danger-color: #EF4444;
+    --light-bg: #FFF0F6;
+    --white-bg: #fff;
+    --border-color: #F9A8D4;
+    --hover-bg: #FFE4F0;
+    --table-header-bg: #EC4899;
+    --table-header-color: #fff;
+    --text-color: #444;
+    --doc-border: #ddd;
+}
+
 .form-box {
     width: 100%;
     max-width: 1000px;
-    background: #fff;
+    background: var(--white-bg);
     padding: 30px;
     border-radius: 12px;
-    border: 2px solid #F9A8D4;
+    border: 2px solid var(--border-color);
     box-shadow: 0 8px 20px rgba(0,0,0,0.1);
     margin: 20px auto;
     overflow-x: auto;
@@ -15,7 +28,7 @@
     text-align: center;
     font-size: 28px;
     font-weight: bold;
-    color: #DB2777;
+    color: var(--primary-color);
     margin-bottom: 20px;
 }
 
@@ -27,23 +40,23 @@
 .gem-table th,
 .gem-table td {
     padding: 12px 15px;
-    border: 1px solid #F9A8D4;
+    border: 1px solid var(--border-color);
     text-align: center;
     font-size: 14px;
 }
 
 .gem-table th {
-    background-color: #EC4899;
-    color: #fff;
+    background-color: var(--table-header-bg);
+    color: var(--table-header-color);
     font-weight: 600;
 }
 
 .gem-table tr:nth-child(even) {
-    background-color: #FFF0F6;
+    background-color: var(--light-bg);
 }
 
 .gem-table tr:hover {
-    background-color: #FFE4F0;
+    background-color: var(--hover-bg);
 }
 
 .doc-img {
@@ -51,7 +64,7 @@
     height: 50px;
     border-radius: 6px;
     object-fit: cover;
-    border: 1px solid #ddd;
+    border: 1px solid var(--doc-border);
 }
 
 .reject-btn {
@@ -61,16 +74,16 @@
     cursor: pointer;
     font-size: 13px;
     font-weight: 600;
-    background-color: #EF4444;
-    color: #fff;
+    background-color: var(--danger-color);
+    color: var(--white-bg);
 }
 
 .reject-btn:hover {
-    background-color: #d63a3a;
+    background-color: #d63a3a; 
 }
 
 .status-rejected {
-    color: #EF4444;
+    color: var(--danger-color);
     font-weight: bold;
 }
 
@@ -78,7 +91,7 @@
     margin-bottom: 15px;
     text-align: center;
     font-weight: bold;
-    color: #444;
+    color: var(--text-color);
 }
 
 .pagination {
@@ -95,20 +108,19 @@
     padding: 8px 12px;
     margin: 2px;
     border-radius: 6px;
-    border: 1px solid #EC4899;
+    border: 1px solid var(--secondary-color);
     text-decoration: none;
-    color: #EC4899;
+    color: var(--secondary-color);
     font-weight: 600;
     transition: 0.3s;
 }
 
 .pagination a.active,
 .pagination a:hover {
-    background-color: #EC4899;
-    color: #fff;
+    background-color: var(--secondary-color);
+    color: var(--white-bg);
 }
 
-/* MOBILE RESPONSIVE */
 @media (max-width: 700px) {
 
     .form-box {
@@ -131,7 +143,7 @@
         border-radius: 12px;
         padding: 15px;
         box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-        background: #fff;
+        background: var(--white-bg);
     }
 
     .gem-table td {
@@ -144,7 +156,7 @@
     .gem-table td::before {
         content: attr(data-label);
         font-weight: bold;
-        color: #EC4899;
+        color: var(--secondary-color);
         flex-basis: 45%;
     }
 
@@ -159,7 +171,6 @@
     }
 }
 
-/* Image modal */
 .img-modal {
     display: none;
     position: fixed;
@@ -179,14 +190,14 @@
     max-width: 90%;
     max-height: 80vh;
     border-radius: 10px;
-    box-shadow: 0 0 10px #fff;
+    box-shadow: 0 0 10px var(--white-bg);
 }
 
 .img-close {
     position: absolute;
     top: 20px;
     right: 35px;
-    color: #fff;
+    color: var(--white-bg);
     font-size: 40px;
     font-weight: bold;
     cursor: pointer;

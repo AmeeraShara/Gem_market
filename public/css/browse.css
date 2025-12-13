@@ -1,10 +1,28 @@
+/* ROOT VARIABLES */
+:root {
+    --pink-50: #FDF2F8;
+    --pink-100: #FCE7F3;
+    --pink-300: #F9A8D4;
+    --pink-500: #EC4899;
+    --pink-600: #DB2777;
+
+    --green-600: #16a34a;
+    --red-600: #dc2626;
+
+    --white: #fff;
+    --black: #111;
+    --gray-500: #555;
+    --gray-700: #777;
+    --gray-300: #ccc;
+}
+
 /* GENERAL BODY */
 body {
     margin: 0;
     padding: 0;
     font-family: 'Arial', sans-serif;
-    background: #FCE7F3;
-    color: #111;
+    background: var(--pink-100);
+    color: var(--black);
 }
 
 /* CONTAINER */
@@ -17,7 +35,7 @@ body {
 
 /* HEADER */
 header {
-    background: #fff;
+    background: var(--white);
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     position: sticky;
     top: 0;
@@ -34,13 +52,13 @@ header {
 .logo {
     font-size: 28px;
     font-weight: 800;
-    color: #DB2777;
+    color: var(--pink-600);
 }
 
 /* BUTTONS */
 .btn-primary {
-    background-color: #EC4899;
-    color: #fff;
+    background-color: var(--pink-500);
+    color: var(--white);
     padding: 10px 24px;
     border-radius: 9999px;
     font-weight: 600;
@@ -50,7 +68,7 @@ header {
 }
 
 .btn-primary:hover {
-    background-color: #DB2777;
+    background-color: var(--pink-600);
 }
 
 /* FILTER BAR */
@@ -66,20 +84,20 @@ header {
 .filter-container input {
     padding: 10px 16px;
     border: none;
-    background: #F9A8D4;
+    background: var(--pink-300);
     font-size: 16px;
     border-radius: 6px;
     outline: none;
     cursor: pointer;
-    color: #111;
+    color: var(--black);
 }
 
 .filter-container select:hover,
 .filter-container input:hover,
 .filter-container select:focus,
 .filter-container input:focus {
-    color: #DB2777;
-    border-bottom: 2px solid #DB2777;
+    color: var(--pink-600);
+    border-bottom: 2px solid var(--pink-600);
 }
 
 .filter-container input {
@@ -95,10 +113,10 @@ header {
 
 /* GEM CARD */
 .card {
-    background: #FDF2F8;
+    background: var(--pink-50);
     border-radius: 18px;
     padding: 16px;
-    border: 2px solid #F9A8D4;
+    border: 2px solid var(--pink-300);
     box-shadow: 0 8px 30px rgba(0,0,0,0.1);
     transition: transform 0.3s;
 }
@@ -141,14 +159,14 @@ header {
 .card-overlay a {
     width: 32px;
     height: 32px;
-    background-color: #f9a8d4;
+    background-color: var(--pink-300);
     border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
     border: none;
     cursor: pointer;
-    color: white;
+    color: var(--white);
     font-size: 18px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.15);
     transition: background-color 0.3s ease;
@@ -157,11 +175,21 @@ header {
 
 .card-overlay button:hover,
 .card-overlay a:hover {
-    background: #db2777;
+    background: var(--pink-600);
 }
 
+.wishlist-btn.active {
+    background-color: var(--pink-500);
+    color: var(--white);
+}
+
+.wishlist-btn:hover {
+    background-color: var(--pink-600);
+}
+
+.wishlist-btn i,
 .wishlist-btn.active i {
-    color: #d20f65;
+    color: var(--white);
 }
 
 /* CARD CONTENT */
@@ -176,29 +204,29 @@ header {
 }
 
 .card-meta {
-    color: #666;
+    color: var(--gray-500);
     font-size: 14px;
     margin-bottom: 6px;
 }
 
 .certified {
-    color: green;
+    color: var(--green-600);
     font-weight: bold;
 }
 
 .uncertified {
-    color: #b60000;
+    color: var(--red-600);
 }
 
 .price {
     font-weight: bold;
     margin-bottom: 5px;
-    color: #EC4899;
+    color: var(--pink-500);
 }
 
 .seller {
     font-size: 14px;
-    color: #666;
+    color: var(--gray-500);
 }
 
 /* PAGINATION */
@@ -220,12 +248,12 @@ header {
 }
 
 .pagination a:hover {
-    background: #ffe3f2;
+    background: var(--pink-50);
 }
 
 .pagination .active {
-    background: #db2777;
-    color: #fff;
+    background: var(--pink-600);
+    color: var(--white);
 }
 
 /* RESPONSIVE */

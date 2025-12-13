@@ -1,10 +1,28 @@
+/* ROOT VARIABLES */
+:root {
+    --pink-50: #FDF2F8;
+    --pink-100: #FCE7F3;
+    --pink-300: #F9A8D4;
+    --pink-500: #EC4899;
+    --pink-600: #DB2777;
+
+    --green-600: #16a34a;
+    --red-600: #dc2626;
+
+    --white: #fff;
+    --black: #111;
+    --gray-500: #555;
+    --gray-700: #777;
+    --gray-300: #ccc;
+}
+
 /* GENERAL BODY */
 body {
     margin: 0;
     padding: 0;
     font-family: 'Arial', sans-serif;
-    background: #FCE7F3;
-    color: #111;
+    background: var(--pink-100);
+    color: var(--black);
 }
 
 /* CONTAINER */
@@ -16,7 +34,7 @@ body {
 
 /* HEADER */
 header {
-    background: #fff;
+    background: var(--white);
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     position: sticky;
     top: 0;
@@ -33,13 +51,13 @@ header {
 .logo {
     font-size: 28px;
     font-weight: 800;
-    color: #DB2777;
+    color: var(--pink-600);
 }
 
 /* BUTTONS */
 .btn-primary {
-    background-color: #EC4899;
-    color: #fff;
+    background-color: var(--pink-500);
+    color: var(--white);
     padding: 10px 24px;
     border-radius: 9999px;
     font-weight: 600;
@@ -49,7 +67,7 @@ header {
 }
 
 .btn-primary:hover {
-    background-color: #DB2777;
+    background-color: var(--pink-600);
 }
 
 /* HERO SECTION */
@@ -97,7 +115,7 @@ header {
     position: absolute;
     bottom: 20px;
     left: 20px;
-    color: #fff;
+    color: var(--white);
 }
 
 .hero-text-main h1 {
@@ -118,7 +136,7 @@ header {
 
 .hero-text-side small {
     font-size: 12px;
-    color: #fff;
+    color: var(--white);
 }
 
 /* LATEST GEM CARDS */
@@ -131,7 +149,7 @@ header {
     font-weight: 700;
     text-align: center;
     margin-bottom: 24px;
-    color: #DB2777;
+    color: var(--pink-600);
 }
 
 .latest-grid {
@@ -141,10 +159,10 @@ header {
 }
 
 .card {
-    background: #FDF2F8;
+    background: var(--pink-50);
     border-radius: 18px;
     padding: 16px;
-    border: 2px solid #F9A8D4;
+    border: 2px solid var(--pink-300);
     box-shadow: 0 8px 30px rgba(0,0,0,0.1);
     transition: transform 0.3s;
 }
@@ -181,14 +199,14 @@ header {
 .card-overlay a {
     width: 32px;
     height: 32px;
-    background-color: #f9a8d4;
+    background-color: var(--pink-300);
     border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
     border: none;
     cursor: pointer;
-    color: white;
+    color: var(--white);
     font-size: 18px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.15);
     transition: background-color 0.3s ease;
@@ -197,7 +215,7 @@ header {
 
 .card-overlay button:hover,
 .card-overlay a:hover {
-    background-color: #db2777;
+    background-color: var(--pink-600);
 }
 
 .card-content h3 {
@@ -208,7 +226,7 @@ header {
 
 .card-meta {
     font-size: 12px;
-    color: #555;
+    color: var(--gray-500);
 }
 
 .card-desc {
@@ -219,29 +237,29 @@ header {
 .price {
     font-size: 16px;
     font-weight: 700;
-    color: #EC4899;
+    color: var(--pink-500);
     margin-top: 8px;
 }
 
 .seller {
     font-size: 12px;
-    color: #555;
+    color: var(--gray-500);
 }
 
 .certified {
-    color: #16a34a;
+    color: var(--green-600);
     font-weight: 700;
 }
 
 .uncertified {
-    color: #dc2626;
+    color: var(--red-600);
     font-weight: 700;
 }
 
 /* FOOTER */
 footer {
-    background: #111;
-    color: #ccc;
+    background: var(--black);
+    color: var(--gray-300);
     padding: 48px 16px;
 }
 
@@ -252,14 +270,14 @@ footer {
 }
 
 .footer-grid h3 {
-    color: #fff;
+    color: var(--white);
     font-size: 18px;
     font-weight: 700;
     margin-bottom: 8px;
 }
 
 .footer-grid a {
-    color: #ccc;
+    color: var(--gray-300);
     text-decoration: none;
 }
 
@@ -267,7 +285,7 @@ footer {
     text-align: center;
     margin-top: 24px;
     font-size: 12px;
-    color: #777;
+    color: var(--gray-700);
 }
 
 /* RESPONSIVE */
@@ -306,7 +324,7 @@ footer {
     }
 }
 
-/* FILTER CONTAINER - horizontal row of buttons */
+/* FILTER CONTAINER */
 .filter-container {
     display: flex;
     gap: 12px;
@@ -319,29 +337,32 @@ footer {
 .filter-container input {
     padding: 10px 16px;
     border: none;
-    background: #F9A8D4;
+    background: var(--pink-300);
     font-size: 16px;
     border-radius: 6px;
     outline: none;
     cursor: pointer;
-    color: #111;
+    color: var(--black);
 }
 
 .filter-container select:hover,
 .filter-container input:hover,
 .filter-container select:focus,
 .filter-container input:focus {
-    color: #DB2777;
-    border-bottom: 2px solid #DB2777;
+    color: var(--pink-600);
+    border-bottom: 2px solid var(--pink-600);
 }
+
 .card .excerpt {
-    color: #555;
+    color: var(--gray-500);
     font-size: 14px;
     margin: 8px 0;
 }
+
+/* WISHLIST */
 .wishlist-btn {
-    background-color: #f9a8d4; /* default */
-    color: #fff;
+    background-color: var(--pink-300);
+    color: var(--white);
     border: none;
     border-radius: 8px;
     width: 32px;
@@ -354,17 +375,15 @@ footer {
 }
 
 .wishlist-btn.active {
-    background-color: #EC4899; /* active color */
-    color: #fff;
+    background-color: var(--pink-500);
+    color: var(--white);
 }
 
 .wishlist-btn:hover {
-    background-color: #db2777;
-}
-.wishlist-btn i {
-    color: #fff;
+    background-color: var(--pink-600);
 }
 
+.wishlist-btn i,
 .wishlist-btn.active i {
-    color: #fff;
+    color: var(--white);
 }

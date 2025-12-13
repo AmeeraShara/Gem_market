@@ -1,8 +1,53 @@
+:root {
+    --body-bg: #FCE7F3;
+    --body-color: #111;
+    --font-family: Arial, sans-serif;
+
+    --header-bg: #EC4899;
+    --header-color: #fff;
+    --header-font-size: 20px;
+    --header-font-weight: bold;
+    --header-padding: 15px 30px;
+    --header-box-shadow: rgba(0,0,0,0.1);
+
+    --form-box-bg: #FDF2F8;
+    --form-box-border: 2px solid #F9A8D4;
+    --form-box-border-radius: 18px;
+    --form-box-box-shadow: rgba(0,0,0,0.15);
+    --form-box-padding: 40px 30px;
+    --form-box-gap: 20px;
+
+    --title-color: #DB2777;
+    --title-font-size: 28px;
+    --title-font-weight: bold;
+
+    --close-btn-color: #555;
+    --close-btn-font-size: 24px;
+
+    --table-bg: #FFF0F6;
+    --table-border: 1px solid #F9A8D4;
+    --table-header-bg: #FCE7F3;
+    --table-header-color: #DB2777;
+
+    --status-approved-color: #059669;
+    --status-pending-color: #D97706;
+    --status-rejected-color: #DC2626;
+
+    --btn-radius: 8px;
+    --view-btn-bg: #DB2777;
+    --view-btn-color: #fff;
+    --edit-btn-bg: #FBBF24;
+    --edit-btn-color: #fff;
+    --delete-btn-bg: #EF4444;
+    --delete-btn-color: #fff;
+}
+
 body {
     margin: 0;
     padding: 0;
-    font-family: Arial, sans-serif;
-    background: #FCE7F3;
+    font-family: var(--font-family);
+    background: var(--body-bg);
+    color: var(--body-color);
     display: flex;
     flex-direction: column;
     min-height: 100vh;
@@ -10,12 +55,12 @@ body {
 
 header {
     width: 100%;
-    background-color: #EC4899;
-    color: white;
-    padding: 15px 30px;
-    font-size: 20px;
-    font-weight: bold;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    background-color: var(--header-bg);
+    color: var(--header-color);
+    padding: var(--header-padding);
+    font-size: var(--header-font-size);
+    font-weight: var(--header-font-weight);
+    box-shadow: 0 4px 6px var(--header-box-shadow);
     position: relative;
     z-index: 10;
 }
@@ -23,14 +68,14 @@ header {
 .form-box {
     width: 100%;
     max-width: 1000px;
-    background: #FDF2F8;
-    padding: 40px 30px;
-    border-radius: 18px;
-    border: 2px solid #F9A8D4;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+    background: var(--form-box-bg);
+    padding: var(--form-box-padding);
+    border-radius: var(--form-box-border-radius);
+    border: var(--form-box-border);
+    box-shadow: 0 8px 30px var(--form-box-box-shadow);
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: var(--form-box-gap);
     margin: 20px auto;
     overflow-x: auto;
     position: relative;
@@ -38,9 +83,9 @@ header {
 
 .title {
     text-align: center;
-    font-size: 28px;
-    font-weight: bold;
-    color: #DB2777;
+    font-size: var(--title-font-size);
+    font-weight: var(--title-font-weight);
+    color: var(--title-color);
 }
 
 .close-btn {
@@ -49,9 +94,9 @@ header {
     right: 10px;
     background: transparent;
     border: none;
-    font-size: 24px;
+    font-size: var(--close-btn-font-size);
     cursor: pointer;
-    color: #555;
+    color: var(--close-btn-color);
 }
 
 .gem-table {
@@ -61,64 +106,54 @@ header {
 
 .gem-table th, .gem-table td {
     padding: 12px 15px;
-    border: 1px solid #F9A8D4;
+    border: var(--table-border);
     text-align: left;
 }
 
 .gem-table th {
-    background-color: #FCE7F3;
-    color: #DB2777;
+    background-color: var(--table-header-bg);
+    color: var(--table-header-color);
 }
 
 .gem-table tr:nth-child(even) {
-    background-color: #FFF0F6;
+    background-color: var(--table-bg);
 }
 
-.status-approved {
-    color: #059669;
-    font-weight: bold;
-}
-
-.status-pending {
-    color: #D97706;
-    font-weight: bold;
-}
-
-.status-rejected {
-    color: #DC2626;
-    font-weight: bold;
-}
+.status-approved { color: var(--status-approved-color); font-weight: bold; }
+.status-pending { color: var(--status-pending-color); font-weight: bold; }
+.status-rejected { color: var(--status-rejected-color); font-weight: bold; }
 
 .view-btn, .action-btn {
     padding: 6px 10px;
     border: none;
-    border-radius: 8px;
+    border-radius: var(--btn-radius);
     cursor: pointer;
     margin-right: 5px;
 }
 
 .view-btn {
-    background: #DB2777;
-    color: white;
+    background: var(--view-btn-bg);
+    color: var(--view-btn-color);
 }
 
 .action-btn.edit {
-    background: #FBBF24;
-    color: white;
+    background: var(--edit-btn-bg);
+    color: var(--edit-btn-color);
 }
 
 .action-btn.delete {
-    background: #EF4444;
-    color: white;
+    background: var(--delete-btn-bg);
+    color: var(--delete-btn-color);
 }
 
+/* RESPONSIVE */
 @media (max-width: 900px) {
     .gem-table th, .gem-table td {
         padding: 10px;
     }
 }
+
 @media (max-width: 600px) {
-    /* Remove form-box styling on mobile */
     .form-box {
         width: 100%;
         padding: 0;
@@ -129,24 +164,24 @@ header {
         background: transparent;
     }
 
-    /* Make gem-table rows card-like or just span full width */
     .gem-table tr {
         margin-bottom: 15px;
-        border: 2px solid #F9A8D4; /* optional card effect */
+        border: var(--table-border);
         border-radius: 12px;
         padding: 20px;
-        background-color: #FFF0F6;
+        background-color: var(--table-bg);
         box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+        display: block;
     }
 
     .gem-table td {
         text-align: left;
         padding-left: 50%;
         position: relative;
-        display: flex;           
-        justify-content: space-between; 
-        gap: 5px;                
-        align-items: center;         
+        display: flex;
+        justify-content: space-between;
+        gap: 5px;
+        align-items: center;
     }
 
     .gem-table td::before {
@@ -164,14 +199,14 @@ header {
     }
 
     .view-btn, .action-btn {
-        padding: 4px 8px;      
-        font-size: 12px;     
-        margin-right: 2px;     
+        padding: 4px 8px;
+        font-size: 12px;
+        margin-right: 2px;
     }
-        .gem-table td[data-label="Actions"] {
+
+    .gem-table td[data-label="Actions"] {
         margin-bottom: 25px;
-        display: block; 
-        width: 100%; 
-           
+        display: block;
+        width: 100%;
     }
 }

@@ -1,64 +1,70 @@
-/* BODY */
+:root {
+    --primary-color: #DB2777;
+    --secondary-color: #EC4899;
+    --background-color: #FCE7F3;
+    --form-bg: #FDF2F8;
+    --input-bg: #fff0f6;
+    --border-color: #F9A8D4;
+    --input-focus-shadow: rgba(249,168,212,0.5);
+    --text-color: #111;
+    --btn-text-color: #fff;
+}
+
 body {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
-    background: #FCE7F3;
+    background: var(--background-color);
     display: flex;
     flex-direction: column;
     min-height: 100vh;
 }
 
-/* CONTAINER */
 .checkout-container {
     max-width: 900px;
     margin: 30px auto;
-    background: #FDF2F8;
+    background: var(--form-bg);
     padding: 40px 30px;
     border-radius: 18px;
-    border: 2px solid #F9A8D4;
+    border: 2px solid var(--border-color);
     box-shadow: 0 8px 30px rgba(0,0,0,0.15);
     display: flex;
     flex-direction: column;
     gap: 25px;
 }
 
-/* TITLE */
 .title {
     text-align: center;
     font-size: 28px;
     font-weight: bold;
-    color: #DB2777;
+    color: var(--primary-color);
 }
 
-/* GRID */
 .grid {
     display: flex;
     gap: 30px;
     flex-wrap: wrap;
 }
 
-/* BOX */
 .box {
     flex: 1;
     min-width: 300px;
-    background: #fff0f6;
+    background: var(--input-bg);
     padding: 25px;
     border-radius: 15px;
-    border: 1px solid #F9A8D4;
+    border: 1px solid var(--border-color);
     box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
 .box h2 {
-    color: #DB2777;
+    color: var(--primary-color);
     margin-bottom: 20px;
 }
 
-/* FORM ELEMENTS */
 label {
     display: block;
     font-weight: 600;
-    color: #DB2777;
+    color: var(--primary-color);
     margin-top: 10px;
     margin-bottom: 5px;
 }
@@ -68,30 +74,28 @@ input, select, textarea {
     padding: 12px;
     font-size: 16px;
     border-radius: 12px;
-    border: 1.5px solid #F9A8D4;
+    border: 1.5px solid var(--border-color);
     box-sizing: border-box;
 }
 
 input:focus, select:focus, textarea:focus {
     outline: none;
-    border-color: #DB2777;
-    box-shadow: 0 0 5px #F9A8D4;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 5px var(--input-focus-shadow);
 }
 
-/* PAYMENT SECTION */
 .payment-section {
     display: none;
     margin-top: 15px;
 }
 
-/* BUTTON */
 .submit-btn {
     width: 100%;
     padding: 14px;
     margin-top: 20px;
     font-size: 16px;
-    background: #EC4899;
-    color: white;
+    background: var(--secondary-color);
+    color: var(--btn-text-color);
     border: none;
     border-radius: 12px;
     cursor: pointer;
@@ -99,10 +103,9 @@ input:focus, select:focus, textarea:focus {
 }
 
 .submit-btn:hover {
-    background: #DB2777;
+    background: var(--primary-color);
 }
 
-/* RESPONSIVE */
 @media(max-width: 900px) {
     .grid {
         flex-direction: column;
@@ -127,4 +130,3 @@ input:focus, select:focus, textarea:focus {
         background: transparent; 
     }
 }
-

@@ -1,9 +1,30 @@
+/* ROOT VARIABLES */
+:root {
+    --pink-50: #FDF2F8;
+    --pink-100: #FCE7F3;
+    --pink-300: #F9A8D4;
+    --pink-500: #EC4899;
+    --pink-600: #DB2777;
+
+    --green-100: #D1FAE5;
+    --green-600: #16a34a;
+    --green-700: #065F46;
+    --green-400: #34D399;
+
+    --gray-100: #E5E7EB;
+    --gray-200: #D1D5DB;
+    --gray-900: #111827;
+
+    --white: #fff;
+    --black: #111;
+}
+
 /* BODY */
 body {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
-    background: #FCE7F3;
+    background: var(--pink-100);
     display: flex;
     flex-direction: column;
     min-height: 100vh;
@@ -13,10 +34,10 @@ body {
 .form-box {
     width: 100%;
     max-width: 900px;
-    background: #FDF2F8;
+    background: var(--pink-50);
     padding: 40px 30px;
     border-radius: 18px;
-    border: 2px solid #F9A8D4;
+    border: 2px solid var(--pink-300);
     box-shadow: 0 8px 30px rgba(0,0,0,0.15);
     display: flex;
     flex-direction: column;
@@ -30,16 +51,16 @@ body {
     text-align: center;
     font-size: 28px;
     font-weight: bold;
-    color: #DB2777;
+    color: var(--pink-600);
 }
 
 /* SUCCESS ALERT */
 .alert-success {
-    background: #D1FAE5;
-    color: #065F46;
+    background: var(--green-100);
+    color: var(--green-700);
     padding: 12px;
     border-radius: 8px;
-    border: 1px solid #34D399;
+    border: 1px solid var(--green-400);
     text-align: center;
 }
 
@@ -68,7 +89,7 @@ body {
 
 .form-row label {
     font-weight: 600;
-    color: #DB2777;
+    color: var(--pink-600);
 }
 
 .form-row input[type="text"],
@@ -77,7 +98,7 @@ body {
     padding: 12px;
     font-size: 16px;
     border-radius: 12px;
-    border: 1.5px solid #F9A8D4;
+    border: 1.5px solid var(--pink-300);
     width: 100%;
     box-sizing: border-box;
 }
@@ -85,8 +106,8 @@ body {
 .form-row input:focus,
 .form-row textarea:focus {
     outline: none;
-    border-color: #DB2777;
-    box-shadow: 0 0 5px #F9A8D4;
+    border-color: var(--pink-600);
+    box-shadow: 0 0 5px var(--pink-300);
 }
 
 /* BUTTONS */
@@ -107,21 +128,21 @@ body {
 }
 
 .back-btn {
-    background: #E5E7EB;
-    color: #111827;
+    background: var(--gray-100);
+    color: var(--gray-900);
 }
 
 .back-btn:hover {
-    background: #D1D5DB;
+    background: var(--gray-200);
 }
 
 .submit-btn {
-    background: #EC4899;
-    color: white;
+    background: var(--pink-500);
+    color: var(--white);
 }
 
 .submit-btn:hover {
-    background: #DB2777;
+    background: var(--pink-600);
 }
 
 /* RESPONSIVE */
@@ -135,13 +156,15 @@ body {
     .form-box {
         padding: 25px 15px;
     }
+
     .form-row textarea {
         padding: 12px;
         font-size: 16px;
         border-radius: 12px;
-        border: 1.5px solid #F9A8D4;
+        border: 1.5px solid var(--pink-300);
     }
 }
+
 @media (max-width: 600px) {
     .form-box {
         padding: 0 !important;
@@ -154,3 +177,23 @@ body {
         width: 100% !important;
     }
 }
+
+.form-row select[name="gem_id"] {
+    padding: 12px;
+    font-size: 16px;
+    border-radius: 12px;
+    border: 1.5px solid var(--pink-300);
+    width: 100%;
+    box-sizing: border-box;
+    cursor: pointer;
+    transition: 0.3s;
+    background-color: var(--pink-50);
+}
+
+.form-row select[name="gem_id"]:focus,
+.form-row select[name="gem_id"]:hover {
+    outline: none;
+    border-color: var(--pink-600);
+    box-shadow: 0 0 5px var(--pink-300);
+}
+

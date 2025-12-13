@@ -1,7 +1,13 @@
-/* FOOTER STYLES */
+:root {
+    --footer-bg: #fefdfd;
+    --footer-text: #111;
+    --footer-hover: #EC4899;
+    --footer-copy: #777;
+}
+
 footer {
-    background: #fefdfd ;
-    color: #111;
+    background: var(--footer-bg);
+    color: var(--footer-text);
     padding: 48px 16px;
 }
 
@@ -12,29 +18,28 @@ footer {
 }
 
 .footer-grid h3 {
-    color: #111;
+    color: var(--footer-text);
     font-size: 18px;
     font-weight: 700;
     margin-bottom: 8px;
 }
 
 .footer-grid a {
-    color: #111;
+    color: var(--footer-text);
     text-decoration: none;
 }
 
 .footer-grid a:hover {
-    color: #EC4899;
+    color: var(--footer-hover);
 }
 
 .footer-copy {
     text-align: center;
     margin-top: 24px;
     font-size: 12px;
-    color: #777;
+    color: var(--footer-copy);
 }
 
-/* RESPONSIVE FOOTER */
 @media (max-width: 768px) {
     .footer-grid {
         grid-template-columns: 1fr;

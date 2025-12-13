@@ -1,61 +1,79 @@
-/* BODY */
+:root {
+    --color-primary: #EC4899;
+    --color-primary-dark: #DB2777;
+    --color-secondary: #F9A8D4;
+    --color-background: #FCE7F3;
+    --color-form-background: #FDF2F8;
+    --color-success-bg: #D1FAE5;
+    --color-success-text: #065F46;
+    --color-button-back: #E5E7EB;
+    --color-button-back-hover: #D1D5DB;
+    --color-text: #111827;
+    --color-label: #DB2777;
+    --font-family-base: Arial, sans-serif;
+    --border-radius: 12px;
+    --border-radius-lg: 18px;
+    --box-shadow-light: 0 4px 6px rgba(0,0,0,0.1);
+    --box-shadow-heavy: 0 8px 30px rgba(0,0,0,0.15);
+    --input-padding: 12px;
+    --transition-speed: 0.3s;
+    --gap-small: 10px;
+    --gap-medium: 15px;
+    --gap-large: 20px;
+}
+
 body {
     margin: 0;
     padding: 0;
-    font-family: Arial, sans-serif;
-    background: #FCE7F3;
+    font-family: var(--font-family-base);
+    background: var(--color-background);
     display: flex;
     flex-direction: column;
     min-height: 100vh;
 }
 
-/* HEADER */
 header {
     width: 100%;
-    background-color: #EC4899;
+    background-color: var(--color-primary);
     color: white;
     padding: 15px 30px;
     font-size: 20px;
     font-weight: bold;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    box-shadow: var(--box-shadow-light);
     position: relative;
     z-index: 10;
 }
 
-/* FORM BOX */
 .form-box {
     width: 100%;
     max-width: 900px;
-    background: #FDF2F8;
+    background: var(--color-form-background);
     padding: 40px 30px;
-    border-radius: 18px;
-    border: 2px solid #F9A8D4;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+    border-radius: var(--border-radius-lg);
+    border: 2px solid var(--color-secondary);
+    box-shadow: var(--box-shadow-heavy);
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: var(--gap-large);
     margin: 20px auto;
 }
 
-/* TITLE */
 .title {
     text-align: center;
     font-size: 28px;
     font-weight: bold;
-    color: #DB2777;
+    color: var(--color-primary-dark);
 }
 
-/* SUCCESS ALERT */
 .alert-success {
-    background: #D1FAE5;
-    color: #065F46;
+    background: var(--color-success-bg);
+    color: var(--color-success-text);
     padding: 12px;
-    border-radius: 8px;
+    border-radius: var(--border-radius);
     border: 1px solid #34D399;
     text-align: center;
 }
 
-/* FORM COLUMNS */
 .form-columns {
     display: flex;
     gap: 30px;
@@ -67,20 +85,19 @@ header {
     min-width: 280px;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: var(--gap-medium);
 }
 
-/* FORM ROWS */
 .form-row {
     display: grid;
     grid-template-columns: 1fr 2fr;
     align-items: center;
-    gap: 10px;
+    gap: var(--gap-small);
 }
 
 .form-row label {
     font-weight: 600;
-    color: #DB2777;
+    color: var(--color-label);
 }
 
 .form-row input[type="text"],
@@ -88,10 +105,10 @@ header {
 .form-row input[type="file"],
 .form-row textarea,
 .form-row select {
-    padding: 12px;
+    padding: var(--input-padding);
     font-size: 16px;
-    border-radius: 12px;
-    border: 1.5px solid #F9A8D4;
+    border-radius: var(--border-radius);
+    border: 1.5px solid var(--color-secondary);
     width: 100%;
     box-sizing: border-box;
     background: #FFF;
@@ -101,13 +118,13 @@ header {
 .form-row textarea:focus,
 .form-row select:focus {
     outline: none;
-    border-color: #DB2777;
-    box-shadow: 0 0 5px #F9A8D4;
+    border-color: var(--color-primary-dark);
+    box-shadow: 0 0 5px var(--color-secondary);
 }
 
 .form-row select {
     background-color: #FFF0F6;
-    color: #DB2777;
+    color: var(--color-label);
     appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -121,42 +138,40 @@ header {
     background-color: #FEE2EC;
 }
 
-/* BUTTONS */
 .button-row {
     display: flex;
     justify-content: space-between;
-    gap: 20px;
+    gap: var(--gap-large);
 }
 
 .button-row button {
     flex: 1;
     padding: 14px;
     font-size: 16px;
-    border-radius: 12px;
+    border-radius: var(--border-radius);
     border: none;
     cursor: pointer;
-    transition: 0.3s;
+    transition: var(--transition-speed);
 }
 
 .back-btn {
-    background: #E5E7EB;
-    color: #111827;
+    background: var(--color-button-back);
+    color: var(--color-text);
 }
 
 .back-btn:hover {
-    background: #D1D5DB;
+    background: var(--color-button-back-hover);
 }
 
 .submit-btn {
-    background: #EC4899;
+    background: var(--color-primary);
     color: white;
 }
 
 .submit-btn:hover {
-    background: #DB2777;
+    background: var(--color-primary-dark);
 }
 
-/* IMAGES GRID */
 .images-grid {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
@@ -168,33 +183,30 @@ header {
     width: 100%;
     height: 140px;
     object-fit: cover;
-    border-radius: 12px;
+    border-radius: var(--border-radius);
     cursor: pointer;
-    border: 1px solid #F9A8D4;
+    border: 1px solid var(--color-secondary);
 }
 
-/* CERTIFICATE PREVIEW */
 .certificate-preview img {
     width: 160px;
     height: 160px;
     object-fit: cover;
-    border-radius: 12px;
-    border: 1px solid #F9A8D4;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--color-secondary);
 }
 
 .certificate-preview a {
-    color: #DB2777;
+    color: var(--color-primary-dark);
     text-decoration: underline;
 }
 
-/* VIDEO STYLING */
 .video-wrapper video {
     width: 30%;
-    border-radius: 12px;
-    border: 1px solid #F9A8D4;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--color-secondary);
 }
 
-/* LIGHTBOX */
 .lightbox {
     display: none;
     position: fixed;
@@ -211,7 +223,7 @@ header {
 .lightbox-img {
     max-width: 90%;
     max-height: 90%;
-    border-radius: 12px;
+    border-radius: var(--border-radius);
 }
 
 .close-btn {
@@ -251,14 +263,7 @@ header {
     video {
         width: 100% !important;
     }
-}
 
-@media (max-width: 400px) {
-    .form-box {
-        padding: 25px 15px;
-    }
-}
-@media (max-width: 600px) {
     .form-box {
         padding: 0 !important;
         margin: 0 !important;
@@ -268,5 +273,11 @@ header {
         background: transparent !important;
         max-width: 100% !important;
         width: 100% !important;
+    }
+}
+
+@media (max-width: 400px) {
+    .form-box {
+        padding: 25px 15px;
     }
 }

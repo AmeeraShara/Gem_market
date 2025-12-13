@@ -1,24 +1,43 @@
-/* BODY */
+:root {
+    --body-bg: #FCE7F3;
+    --body-text: #111;
+    --header-bg: #EC4899;
+    --header-text: #fff;
+    --gem-title: #DB2777;
+    --gem-strong: #EC4899;
+    --buy-btn-bg: #28a745;
+    --buy-btn-hover: #218838;
+    --login-btn-bg: #ccc;
+    --login-btn-text: #555;
+    --wishlist-color: #f9a8d4;
+    --wishlist-active: red;
+    --related-bg: #f9f9f9;
+    --card-bg: #fff;
+    --card-border: #eee;
+    --card-title: #EC4899;
+    --price-color: #28a745;
+    --certified-color: green;
+    --uncertified-color: red;
+}
+
 body {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
-    background: #FCE7F3;
-    color: #111;
+    background: var(--body-bg);
+    color: var(--body-text);
 }
 
-/* HEADER */
 header {
     width: 100%;
-    background-color: #EC4899;
-    color: white;
+    background-color: var(--header-bg);
+    color: var(--header-text);
     padding: 15px 30px;
     font-size: 20px;
     font-weight: bold;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
-/* GEM DETAIL SECTION */
 .gem-detail-section {
     padding: 40px 20px;
 }
@@ -29,7 +48,6 @@ header {
     flex-wrap: wrap;
 }
 
-/* LEFT: Images */
 .gem-images {
     flex: 1;
     min-width: 300px;
@@ -56,10 +74,9 @@ header {
 }
 
 .gem-images .thumb:hover {
-    border: 2px solid #EC4899;
+    border: 2px solid var(--gem-strong);
 }
 
-/* RIGHT: Details */
 .gem-details {
     flex: 1;
     min-width: 300px;
@@ -67,7 +84,7 @@ header {
 
 .gem-details h1 {
     font-size: 28px;
-    color: #DB2777;
+    color: var(--gem-title);
     margin-bottom: 10px;
 }
 
@@ -77,10 +94,9 @@ header {
 }
 
 .gem-details strong {
-    color: #EC4899;
+    color: var(--gem-strong);
 }
 
-/* BUY BUTTON */
 .gem-details button,
 .gem-details .submit-btn {
     margin-top: 20px;
@@ -93,20 +109,19 @@ header {
 }
 
 .gem-details button.buy-now {
-    background: #28a745;
-    color: #fff;
+    background: var(--buy-btn-bg);
+    color: var(--header-text);
 }
 
 .gem-details button.buy-now:hover {
-    background: #218838;
+    background: var(--buy-btn-hover);
 }
 
 .gem-details button.login {
-    background: #ccc;
-    color: #555;
+    background: var(--login-btn-bg);
+    color: var(--login-btn-text);
 }
 
-/* WISHLIST */
 .wishlist-btn {
     background: none;
     border: none;
@@ -117,24 +132,23 @@ header {
 
 .wishlist-btn i {
     font-size: 28px;
-    color: #f9a8d4;
+    color: var(--wishlist-color);
     transition: 0.3s;
 }
 
 .wishlist-btn.active i {
-    color: red;
+    color: var(--wishlist-active);
 }
 
-/* RELATED GEMS */
 .related-gems {
     padding: 40px 20px;
-    background: #f9f9f9;
+    background: var(--related-bg);
 }
 
 .related-gems h2 {
     text-align: center;
     font-size: 24px;
-    color: #DB2777;
+    color: var(--gem-title);
     margin-bottom: 20px;
 }
 
@@ -145,10 +159,10 @@ header {
 }
 
 .card {
-    background: #fff;
+    background: var(--card-bg);
     border-radius: 12px;
     overflow: hidden;
-    border: 1px solid #eee;
+    border: 1px solid var(--card-border);
     position: relative;
     box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
@@ -174,7 +188,7 @@ header {
 .card-content h3 {
     margin: 0;
     font-size: 18px;
-    color: #EC4899;
+    color: var(--card-title);
 }
 
 .card-content .card-meta {
@@ -183,26 +197,25 @@ header {
 }
 
 .certified {
-    color: green;
+    color: var(--certified-color);
     font-weight: bold;
 }
 
 .uncertified {
-    color: red;
+    color: var(--uncertified-color);
     font-weight: bold;
 }
 
 .card-content .price {
     font-size: 16px;
     font-weight: bold;
-    color: #28a745;
+    color: var(--price-color);
 }
 
 .card-content .seller {
     font-size: 14px;
 }
 
-/* RESPONSIVE */
 @media (max-width: 900px) {
     .gem-detail-section .container {
         flex-direction: column;

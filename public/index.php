@@ -238,12 +238,20 @@ sort($carats);
 document.querySelectorAll('.wishlist-btn').forEach(button => {
   button.addEventListener('click', () => {
     const gemId = button.getAttribute('data-gem-id');
+
+    // Login check (PHP session)
+    const loggedIn = <?= isset($_SESSION['user_id']) ? 'true' : 'false' ?>;
+    if (!loggedIn) {
+      alert('Please log in to use the wishlist');
+      return;
+    }
+
     const isActive = button.classList.contains('active');
     const url = isActive ? 'wishlist-remove.php' : 'wishlist-add.php';
 
     fetch(url, {
       method: 'POST',
-      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: `gem_id=${encodeURIComponent(gemId)}`
     })
     .then(res => res.json())
@@ -252,7 +260,9 @@ document.querySelectorAll('.wishlist-btn').forEach(button => {
         button.classList.toggle('active');
         button.setAttribute(
           'title',
-          button.classList.contains('active') ? 'Remove from wishlist' : 'Add to wishlist'
+          button.classList.contains('active')
+            ? 'Remove from wishlist'
+            : 'Add to wishlist'
         );
       } else {
         alert(data.message);

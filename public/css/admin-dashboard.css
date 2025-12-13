@@ -1,14 +1,23 @@
-/* =============================
-   ADMIN DASHBOARD STYLES
-============================= */
 
-/* GENERAL BODY */
+:root {
+    --pink-50: #FDF2F8;
+    --pink-100: #FCE7F3;
+    --pink-300: #F9A8D4;
+    --pink-500: #EC4899;
+    --pink-600: #DB2777;
+
+    --white: #fff;
+    --black: #111;
+
+    --shadow-dark: rgba(0,0,0,0.1);
+}
+
 body {
     margin: 0;
     padding: 0;
     font-family: 'Arial', sans-serif;
-    background: #FCE7F3;
-    color: #111;
+    background: var(--pink-100);
+    color: var(--black);
 }
 
 /* CONTAINER */
@@ -26,11 +35,11 @@ body {
     align-items: center;
     flex-direction: column;
     padding: 80px 16px;
-    background: linear-gradient(135deg, #F9A8D4 0%, #EC4899 100%);
-    color: #fff;
+    background: linear-gradient(135deg, var(--pink-300) 0%, var(--pink-500) 100%);
+    color: var(--white);
     border-radius: 12px;
     margin: 32px;
-    box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+    box-shadow: 0 8px 30px var(--shadow-dark);
 }
 
 .dashboard-hero h1 {
@@ -45,8 +54,8 @@ body {
 
 /* BUTTONS */
 .btn-primary {
-    background-color: #fff;
-    color: #DB2777;
+    background-color: var(--white);
+    color: var(--pink-600);
     padding: 12px 28px;
     border-radius: 9999px;
     font-weight: 600;
@@ -61,8 +70,8 @@ body {
 }
 
 .btn-primary:hover {
-    background-color: #F9A8D4;
-    color: #fff;
+    background-color: var(--pink-300);
+    color: var(--white);
 }
 
 /* RESPONSIVE */
